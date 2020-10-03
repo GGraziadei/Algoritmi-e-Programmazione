@@ -1,0 +1,74 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
+
+#define MAX_N 30
+void stampaVettore (int* vettore, int N);
+void ruota(int*vettore, int N,int P,int dir);
+
+int main()
+{
+    int i,finito,dir,P,N = 0;
+    finito = 0;
+
+    while(!finito) {
+        printf("Inserire lunghezza vettore (max %d) N: ", MAX_N);
+        scanf("%d",&N);
+        if(N<=MAX_N)finito=1;
+        else printf("ERRORE \n\n");
+    }
+    int vettore[N];
+    for(i=0;i<N;i++){
+        printf("Inserire elemento %d del vettore  ", i+1);
+        scanf("%d", &vettore[i]);
+    }
+    printf("INIZIO ROTAZIONE VETTORE: ");
+    stampaVettore(vettore,N);
+    P = 0;
+    dir = 0;
+    do{
+        do{
+        printf("Inserire il numero di posizioni P (0 per uscire): ");
+        scanf("%d",&P);
+        if(P>N && P%N) P = P%N; //Valuto gli overloop +di un giro
+        }while(P>=N);
+        if(P){
+            while(!dir){
+                printf("\nInserire direzione rotazione -1=DESTRA 1=SINISTRA: ");
+                scanf("%d",&dir);
+            }
+            ruota (vettore,N,P,dir);
+            stampaVettore(vettore,N);
+            dir = 0;
+        }
+    }while(P);
+
+    return 0;
+}
+void stampaVettore (int* vettore, int N){
+    int i=0;
+    for(i=0;i<N;i++) printf("%d  ",vettore[i]);
+    printf("\n");
+return;
+}
+
+void ruota(int*vettore, int N,int P,int dir){
+int i,j,value;
+int tmp[N];
+for(i=0;i<N;i++)tmp[i]=vettore[i];
+
+        j =0;
+        for(i=P; i<N; i++){
+            vettore[i]=tmp[j];
+            j++;
+        }
+        if(!)
+        for(i=0;i<=N-j;i++){
+            vettore[i]=tmp[j];
+            j++;
+        }
+
+
+
+}

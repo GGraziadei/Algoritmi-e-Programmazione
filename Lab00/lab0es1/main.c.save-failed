@@ -1,0 +1,75 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define N 30
+
+int main()
+{
+    int vettore[N];
+    int l = leggiVettore (vettore);
+    int soluzione[l] ={-1};
+    creaSoluzione(vettore,soluzione,l);
+
+    return 0;
+
+}
+int leggiVettore (int*vettore[]){
+int j,finito,i=0;
+finito = 0;
+
+    while (i<N && !finito) {
+            printf("Add %d elemento del vettore:  ",i+1);
+        int tmp=0;
+        scanf("%d",&tmp);
+        if(tmp<0)finito=1;
+        else{
+            vettore[i]=tmp;
+            i++;
+        }
+    }
+
+for(j=0;j<i;j++)printf("%d \n",vettore[j]);
+
+    return i; //i lunghezza effettiva del vettore
+}
+
+void creaSoluzione (int* vettore[], int* soluzione[], int l){
+int i,j,k;
+
+
+}
+Operative calcola (int* vettore[],int l){
+Operative o;
+int k,i,j,finito;
+int tmp[l]; //vettore temporaneo
+finito =0;
+k = 0;
+for(j=0;j<N;j++)o.index[j]= 0; //Alloc 0
+
+    j=0;
+    for(i=0;i<l;i++){
+        if(!vettore[i])
+        {
+                tmp[j]=i;
+                j++;
+        }
+    }
+
+ //j mi indica il numero di 0 trovati
+
+    o.max = tmp[0];
+
+    for(i=1;i<j ;i++){
+            if(tmp[i]-tmp[i-1]-1 >= o.max){
+                o.max = tmp[i]-tmp[i-1]-1;
+                o.index[k] = tmp[i];
+                k++;
+            }
+        }
+
+    if(!o.index[0]) o.index[0] = tmp[0]; //Nel caso in cui non esistono valori più alti accetto il primo
+   // if(tmp[0] >= o.max) o.index[k]=tmp[0]; IMPLICITA!
+
+
+o.k = k; //quanti indici ho trovato
+return o;
+}
