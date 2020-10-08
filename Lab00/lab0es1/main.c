@@ -4,10 +4,10 @@
 #include <stdlib.h>
 #define N 30
 
-void creaSoluzione (int* vettore[], int* soluzione[], int l);
-int leggiVettore (int*vettore[]);
-int trovaMax (int* vettore[], int l);
-void stampaSoluzione (int* vettore[], int* soluzione[], int l, int max);
+void creaSoluzione (int* , int* , int l);
+int leggiVettore (int*);
+int trovaMax (int*, int l);
+void stampaSoluzione (int* , int* , int l, int max);
 
 int main()
 {
@@ -23,7 +23,7 @@ int main()
 }
 
 
-int leggiVettore (int*vettore[]){
+int leggiVettore (int vettore[]){
 int j,finito,i=0;
 finito = 0;
 
@@ -43,7 +43,7 @@ for(j=0;j<i;j++)printf("%d \n",vettore[j]);
     return i; //i lunghezza effettiva del vettore
 }
 
-void creaSoluzione (int* vettore[], int* soluzione[], int l){
+void creaSoluzione (int vettore[], int soluzione[], int l){
 int i,j,k;
 j=0;
     for(i=0;i<l;i++){
@@ -58,7 +58,7 @@ j=0;
 
 }
 
-int trovaMax (int* vettore[], int l){
+int trovaMax (int vettore[], int l){
 int i,max;
 max =0;
 
@@ -69,13 +69,13 @@ max =0;
 return max;
 }
 
-void stampaSoluzione (int* vettore[], int* soluzione[], int l, int max){
+void stampaSoluzione (int vettore[], int soluzione[], int l, int max){
 int i,j;
 
     for(i=0;i<l+1;i++){
         if(soluzione[i]== max){ //Se l'indice è soluzione, quindi diverso da 0
             for(j=i-max; !soluzione[j]; j++) {
-                printf("%d (%d) //", vettore[j],j);
+                printf(" -> %d indice:%d ", vettore[j],j);
             }
             printf("\n\n");
         }
