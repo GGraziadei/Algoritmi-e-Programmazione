@@ -113,7 +113,8 @@ void ricodifica (Dizionario d[], FILE* sorgente, FILE* out, int S){
         j=0;
         for(i=0; i<strlen(tmp_str)+1; i++){ //RIGA
 
-            if(tmp_str[i] == ' ' || i == strlen(tmp_str)-1 ){ //PAROLA
+            if(tmp_str[i] == ' ' || i == strlen(tmp_str)-1 ){
+            /*Trovando sottostringhe evito inutili strcmp() */
                 finito =0;
                 ii = 0;
                 for(jj=i-j; jj<i; jj++){

@@ -193,12 +193,12 @@ void eseguiMossa (Mossa mossa, Info *matrix){
     while (pos > max){
         pos=pos-max;
     }
-    if (mossa.p==max) pos=0;
+    if (pos==max) pos=0;
 
      printf("Numero di spostamenti ottimizzati: %d \n",pos);
 
      if(pos){
-    //----------------------
+    //---------------------- Rif. lezione Cumani gomoku3.c
      int delta[2][2] = {
         {0,(pos*mossa.dir)}, /* riga: indice di riga non cambia, spostamento di pos * dir su riga */
         {pos*mossa.dir,0} /* colonna: spostamento di pos * dir su colonna, indice di colonna non cambia  */
@@ -208,7 +208,7 @@ void eseguiMossa (Mossa mossa, Info *matrix){
 
     //----------------------
 
-    printf("Conversione mossa: (%d,%d)\n",dx,dy);
+    printf("Vettore geom: (%d,%d)\n",dy,dx);
     j=0;
     if(dx >0 || dy >0){//Destra o giu
 
