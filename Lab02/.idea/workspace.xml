@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
+    <generated />
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="2128a3d6-c13f-4eba-bf59-663dea073772" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../Lab00/lab0es1/lab0.layout" beforeDir="false" afterPath="$PROJECT_DIR$/../Lab00/lab0es1/lab0.layout" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Lab01/lab1e3/bin/Debug/lab0e3.exe" beforeDir="false" afterPath="$PROJECT_DIR$/../Lab01/lab1e3/bin/Debug/lab0e3.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Lab01/lab1e3/lab0e3.layout" beforeDir="false" afterPath="$PROJECT_DIR$/../Lab01/lab1e3/lab0e3.layout" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Lab01/lab1e3/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/../Lab01/lab1e3/main.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Lab01/lab1e3/obj/Debug/main.o" beforeDir="false" afterPath="$PROJECT_DIR$/../Lab01/lab1e3/obj/Debug/main.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Lab01/lab1es1/bin/Debug/lab0es1.exe" beforeDir="false" afterPath="$PROJECT_DIR$/../Lab01/lab1es1/bin/Debug/lab0es1.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Lab01/lab1es1/lab0es1.layout" beforeDir="false" afterPath="$PROJECT_DIR$/../Lab01/lab1es1/lab0es1.layout" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Lab01/lab1es1/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/../Lab01/lab1es1/main.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Lab01/lab1es1/obj/Debug/main.o" beforeDir="false" afterPath="$PROJECT_DIR$/../Lab01/lab1es1/obj/Debug/main.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Lab01/lab1es2/lab1es2.layout" beforeDir="false" afterPath="$PROJECT_DIR$/../Lab01/lab1es2/lab1es2.layout" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lab02es3/bin/Debug/lab02es3.exe" beforeDir="false" afterPath="$PROJECT_DIR$/lab02es3/bin/Debug/lab02es3.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lab02es3/lab02es3.depend" beforeDir="false" afterPath="$PROJECT_DIR$/lab02es3/lab02es3.depend" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lab02es3/lab02es3.layout" beforeDir="false" afterPath="$PROJECT_DIR$/lab02es3/lab02es3.layout" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lab02es3/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/lab02es3/main.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lab02es3/main.c.save" beforeDir="false" afterPath="$PROJECT_DIR$/lab02es3/main.c.save" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lab02es3/main.c.save-failed" beforeDir="false" afterPath="$PROJECT_DIR$/lab02es3/main.c.save-failed" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lab02es3/obj/Debug/main.o" beforeDir="false" afterPath="$PROJECT_DIR$/lab02es3/obj/Debug/main.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lab02es3/sequenze.txt" beforeDir="false" afterPath="$PROJECT_DIR$/lab02es3/sequenze.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lab2es1/bin/Debug/lab2es1.exe" beforeDir="false" afterPath="$PROJECT_DIR$/lab2es1/bin/Debug/lab2es1.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lab2es1/lab2es1.depend" beforeDir="false" afterPath="$PROJECT_DIR$/lab2es1/lab2es1.depend" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lab2es1/lab2es1.layout" beforeDir="false" afterPath="$PROJECT_DIR$/lab2es1/lab2es1.layout" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lab2es1/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/lab2es1/main.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lab2es1/obj/Debug/main.o" beforeDir="false" afterPath="$PROJECT_DIR$/lab2es1/obj/Debug/main.o" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectId" id="1ijMicaQosCbc33lCqngfnsZKa3" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="cf.first.check.clang-format" value="false" />
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="2128a3d6-c13f-4eba-bf59-663dea073772" name="Default Changelist" comment="" />
+      <created>1602416677184</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1602416677184</updated>
+      <workItem from="1602416681851" duration="24000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="852" y="239" key="run.anything.popup" timestamp="1602416694012">
+      <screen x="0" y="0" width="2560" height="1050" />
+    </state>
+    <state x="852" y="239" key="run.anything.popup/0.0.2560.1050@0.0.2560.1050" timestamp="1602416694012" />
+  </component>
+</project>

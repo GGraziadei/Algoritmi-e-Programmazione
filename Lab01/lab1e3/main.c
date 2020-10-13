@@ -7,7 +7,7 @@
 #define S1 100+1
 #define N 30
 
-// posso cambiare vocabolario
+/* vocabolario interazione utente */
 #define RIGA "riga"
 #define COLONNA "colonna"
 #define FINE "fine"
@@ -189,16 +189,12 @@ void eseguiMossa (Mossa mossa, Info *matrix){
             printf("%d ",tmp[i]);
             }
     } //MUOVO SU RIGA (0)
-    pos = mossa.p;
-    while (pos > max){
-        pos=pos-max;
-    }
-    if (pos==max) pos=0;
+    pos = mossa.p%max;
 
-     printf("Numero di spostamenti ottimizzati: %d \n",pos);
+     printf("Numero di spostamenti effettivi: %d \n",pos);
 
      if(pos){
-    //---------------------- Rif. lezione Cumani gomoku3.c
+    //----------------------
      int delta[2][2] = {
         {0,(pos*mossa.dir)}, /* riga: indice di riga non cambia, spostamento di pos * dir su riga */
         {pos*mossa.dir,0} /* colonna: spostamento di pos * dir su colonna, indice di colonna non cambia  */

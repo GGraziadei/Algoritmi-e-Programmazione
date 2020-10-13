@@ -1,0 +1,129 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+# define maxKey 100
+#define S 30+1
+#define MAXN 1000
+
+typedef int Item;
+
+int ITEMeq (Item A , Item B);
+int ITEMneq (Item A, Item B);
+int ITEMlt (Item A, Item B);
+int ITEMgt (Item A, Item B);
+void ITEMshow (Item A[],int n);
+
+
+int main()
+{
+    FILE *fp;
+    char str[S];
+    int i,j,r,n;
+    Item arraySelection [MAXN];
+    Item arrayInsertion [MAXN];
+    Item arrayShell [MAXN];
+
+    do{
+            printf("Inserire il percorso del file sort.txt: ");
+            gets(str);
+            fp = fopen(str,"r");
+            printf("%s",fp==NULL?"File non trovato\n":"File Aperto correttamente\n");
+
+    }while(fp==NULL);
+
+    fscanf(fp,"%d",&r); /* Numero di righe del file, ogni riga contiene una sequenza */
+
+    for(i=0; i<r; i++){
+      fscanf(fp,"%d",&n);
+      /* Salvo la sequenza della riga i-esima in Item
+      copio il vettore per utilizzare i 3 algoritmi di ordinamento */
+      for(j=0;j<n;j++){
+            fscanf(fp,"%d",&arraySelection[j]);
+            arrayInsertion[j]=arraySelection[j];
+            arrayShell[j]=arraySelection[j];
+      }
+      stampaSelectionSort(arraySelection,n);
+      stampaInsertionSort(arrayInsertion,n);
+      stampaShellSort(arrayShell,n);
+    }
+
+    fclose(fp);
+
+    return 0;
+}
+
+void stampaSelectionSort(Item A[], int n){
+int i,j,min,r,l,nScambi,nIterazioni;
+r=n-1;
+l=0
+nScambi=0;
+nIterazioni=0,min;
+
+printf("--- SELECTION SORT ---\nSequenza: ");
+ITEMshow(A,n);
+    for(i=l; l<=r; i++){
+        nIterazioni++;
+        min = i;
+        /*trova il minimo nel vettore [i+1,r]*/
+        for(j=i+1; j<=r; j++){
+            if(ITEMlt(A[j],A[i]))
+                min = j;
+                nIterazioni++;
+        }
+
+        if(i!=min){
+            printf("-> Scambia %d con %d\n",A[i],A[min]);
+            scambiaItem(&A[i],&A[min]);
+            nScambi = nScambi+1;
+        }
+        printf("A[%d] = %d\n",i,A[i]);
+        printf("Iterazioni ciclo interno %d\n",j);
+    }
+    printf("iterazioni ciclo esterno %d\n",i);
+    printf("Scambi tot %d\n",nScambi);
+    printf("Iterazioni tot %d\n",nIterazioni);
+return;
+}
+
+void stampaInsertionSort(Item A, int n){
+int i,j;
+printf("--- SELECTION SORT ---\nSequenza: ");
+ITEMshow(A,n);
+return;
+}
+
+void stampaShellSort(Item A, int n){
+int i,j;
+printf("--- SELECTION SORT ---\nSequenza: ");
+ITEMshow(A,n);
+return;
+}
+
+int ITEMeq (Item A, Item B) {
+return (A == B);
+}
+int ITEMneq (Item A, Item B) {
+return (A != B);
+}
+int ITEMlt (Item A, Item B) {
+return (A <B);
+}
+int ITEMgt (Item A, Item B) {
+return (A > B);
+}
+void ITEMshow (Item A[], int n){
+int i;
+for(i=0; i<n; i++)printf("%d ",A[i]);
+return;
+}
+
+void scambiaItem (Item *pa, Item *pb){
+  Item temp;
+  temp = *pa;
+  *pa = *pb;
+  *pb = temp;
+return;
+}
+
+
+

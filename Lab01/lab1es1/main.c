@@ -46,7 +46,7 @@ Campionato creaCampionato(void){
     if(nomeCampionato != NULL) {
             FILE *in = fopen(nomeCampionato,"r");
 
-            if(in == NULL )exit("Errore file non trovato RIAVVIA!");
+            if(in == NULL )exit(-1);
 
 
             fscanf(in,"%d %d",&c.teams,&c.giornate);

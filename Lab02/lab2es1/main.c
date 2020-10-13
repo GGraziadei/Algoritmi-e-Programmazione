@@ -3,7 +3,7 @@
 #include <string.h>
 
 #define N 50
-#define S 100
+#define S 100+1
 
 typedef struct {
 /* il vertice in alto a sx ha coordinate i[0],j[0]
@@ -58,7 +58,7 @@ void creaMappa(int mappa[][N], int dim[]){
                 //printf("%d  ", mappa[i][j]);
                 if(mappa[i][j]!= 0 && mappa[i][j]!= 1){
                     printf("Verificare file riga %d colonna %d",i+1,j+1);
-                    exit("Errore nel formato del file");
+                    exit(-1);
                 }
             }
             //printf("\n");

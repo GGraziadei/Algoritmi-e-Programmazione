@@ -3,14 +3,14 @@
 #include <string.h>
 #include <ctype.h>
 
-#define MAX_WORD 10 //max numero di occorrenze
+#define MAX_WORD 10 //max numero di occorrenze per seq
 #define N 20
-#define SC 5
-#define SS 200
-#define SP 25
+#define SC 5+1
+#define SS 200+1
+#define SP 25+1
 #define TESTO "testo.txt"
 #define SEQUENZE "sequenze.txt"
-#define SPAZIO " "
+#define SHOWINDEX 1 //stampa posizione assegnata alle parole lette 1=VERO 0=FALSO
 
 typedef struct{
 int l;
@@ -18,26 +18,26 @@ int occIndex [MAX_WORD];
 char words[MAX_WORD][SP];
 int occNow;
 char seq [SC];
-}Parola;
+}Sequenza;
 
-void trovaOccorrenze (Parola *,int );
-int leggiParole( Parola *);
-void stampaRes (Parola* , int );
+void trovaOccorrenze (Sequenza *,int );
+int leggiSeq ( Sequenza *);
+void stampaRes (Sequenza* , int );
 void toMinuscolo (char *);
 
 int main()
 {
-    Parola parole[N];
-    int n = leggiParole(parole);
-    trovaOccorrenze(parole,n);
-    stampaRes (parole,n);
+    Sequenza sequenze[N];
+    int n = leggiSeq(sequenze);
+    trovaOccorrenze(sequenze,n);
+    stampaRes (sequenze,n);
 
     return 0;
 }
 
 
 
-int leggiParole( Parola p[]){
+int leggiSeq( Sequenza p[]){
     int j,i,n =0;
     FILE *fin = fopen(SEQUENZE,"r");
     if(fin==NULL)EXIT_FAILURE;
@@ -46,19 +46,19 @@ int leggiParole( Parola p[]){
 
     for(i=0;i<n;i++){
         if(fscanf(fin,"%s",p[i].seq)!=1)
-           exit("Check sequenze.txt necessario");
+           exit(-1);
         toMinuscolo(p[i].seq);
         p[i].l = strlen(p[i].seq);
         p[i].occNow = 0;
         for(j=0; j<MAX_WORD; j++)p[i].occIndex[j] =-1;
     }
-    printf("sequenze lette: %d\n",n);
+    if(SHOWINDEX)printf("sequenze lette: %d\n",n);
 
     fclose(fin);
     return n;
 }
 
-void trovaOccorrenze (Parola p[],int n){
+void trovaOccorrenze (Sequenza p[],int n){
     int parole,l,ll,i,ii,j,jj,m;
     char word[SP];
     char wordCpy[SP];
@@ -68,44 +68,41 @@ void trovaOccorrenze (Parola p[],int n){
     if(fin==NULL)EXIT_FAILURE;
     parole =0;
 
-    /* Non avendo vincoli in out leggo parola per parola */
+    /* Leggo riga per riga per estrapolare correttamente le words */
 
         while(fgets(str,SS,fin)!= NULL){
             l = strlen(str);
             j=0;
 
             for(i=0; i<l; i++){ /* Costruzione words riga*/
-                if(!isprint(str[i])){
-                        str[i]=' ';
-                }
+
                 if( isspace(str[i])  || (ispunct(str[i])&& str[i]!=' ') ){
 
-                    /* j n+1 degli alnum prima della terminazione i è
-                    l'indice del carattere da saltare "j si muove come una molla, carica i caratteri e rilascia */
-                    ii = j;
+                    /* j n+1 degli alnum prima della terminazione i ï¿½
+                    l'indice del carattere da saltare
+                    j "si muove come una molla", tramite conteggio di caratteri
+                    e contestuale rilascio in word
+                    Sal vo in ii i j ovvero il numero dei caratteri selezionati*/
 
-                    for(jj=0; jj<ii && str[i-j]!=' '; jj++){
-                            word[jj]=str[i-j];
-                            j = j-1;
-                    }
-                    word[jj] = '\0';/* jj = strlen(word) per controllo jj = j+1*/
+                    for(ii=j,jj=0; jj<ii && str[i-j]!=' '; jj++,j--)
+                        word[jj]=str[i-j];
+                    word[jj] = '\0';/* jj = strlen(word) per controllo jj = ii +1*/
 
-                     if(!j){
-                        strcpy(wordCpy,word);
+                     if(!j && strlen(word)>0){
+                        strcpy(wordCpy,word);/* toMinuscolo fa perdere le informazioni sulle maiuscole*/
                         toMinuscolo(word);
                         parole = parole+1;
-                        printf("%s n: %d\n",word,parole);
+                        if(SHOWINDEX)printf("%s (pos: %d)\n",word,parole);
 
                          for(ii=0; ii<jj; ii++){
-                         //rif. esercizio 2 lab1 + pag. 50 dal problema al programma
                             strTest = &(word[ii]);
                             ll = strlen(strTest);
 
                                 for(m=0; m<n; m++){
                                     if(p[m].l<=ll && p[m].occNow <MAX_WORD && p[m].occIndex[p[m].occNow-1] != parole){
-                                    /* Verifico compatibilità alla strncmp
-                                    con p[m].occIndex[p[m].occNow-1] != parole verifico che l'occorrenza non sia stata già segnata per
-                                    la word corrente. */
+                                    /* Verifico compatibilitï¿½ alla strncmp
+                                    con (p[m].occIndex[p[m].occNow-1] != parole) verifico che l'occorrenza non sia stata giï¿½ segnata per
+                                    processata per la word. */
                                       if(!strncmp(strTest,p[m].seq,p[m].l)){
                                         strcpy(p[m].words[p[m].occNow],wordCpy);
                                         p[m].occIndex[p[m].occNow]=parole;
@@ -116,7 +113,15 @@ void trovaOccorrenze (Parola p[],int n){
                             }
                       }
                 }
-                else if (isalnum(str[i])) j=j+1; //continua a "caricare" caratteri
+                else if (isalnum(str[i])) j=j+1;
+                else {
+                  /* Se non ï¿½ un carattere di mia competenza lo sostituisco con spazio
+                   e decremento i, questa procedura non ï¿½ risuttiva in quanto si definisce word
+                   sequenza di alnum contigui */
+                  str[i]=' ';
+                  i = i-1;
+                }
+
             }
         }
 
@@ -124,16 +129,19 @@ void trovaOccorrenze (Parola p[],int n){
 return;
 }
 
-void stampaRes (Parola p[], int n){
+void stampaRes (Sequenza p[], int n){
     int i,jj;
-
+    printf("---------------------------\n\n");
     for(i=0; i<n; i++){//sequenza
-    if(p[i].occIndex[jj]>0)printf("La sequenza ' %s ' contenuta in: \n",p[i].seq);
-    else printf("La sequenza ' %s ' non contiene occorrenze\n",p[i].seq);
+    /* If condizionale <condizione> ? <Se_Vero>:<Se_falso>*/
+    printf("Sequenza %s",p[i].seq);
+    printf("%s",p[i].occNow>=1?" contenuta in: ":" non presenta occorrenze\n");
+
         for(jj=0; jj<p[i].occNow && p[i].occIndex[jj]>0; jj++){
-            printf("%s (parola in posizione %d)\n",p[i].words[jj],p[i].occIndex[jj]);
+            printf("%s (Parola in posizione %d)%c ",p[i].words[jj],p[i].occIndex[jj],
+                   jj==p[i].occNow-1?'':',);
         }
-    printf("_____________________________\n\n");
+    printf("\n\n---------------------------\n\n");
     }
 
 }
