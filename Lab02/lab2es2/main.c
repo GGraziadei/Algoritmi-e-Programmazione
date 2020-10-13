@@ -219,7 +219,8 @@ e_comandi Ritardo (Corsa c[], int n){
         printf("Corse in ritardo dal %s al %s: \n",data1,data2);
         for(i=0; i<n; i++){
             if(testDate(data1,data2,c[i].date) && c[i].delay_time)
-                printf("Codice tratta: %s (da %s a %s) RITARDO %d MINUTI\n\n",c[i].codTratta,c[i].start,c[i].end,c[i].delay_time);
+                printf("Codice tratta: %s (da %s a %s) RITARDO %d MINUTI\n\n",
+                       c[i].codTratta,c[i].start,c[i].end,c[i].delay_time);
         }
 
     }
@@ -254,6 +255,8 @@ return 0;
 }
 
 int verificaFormato(char date[]){
+    /*formato data: YYYY/MM/DD
+    Ricodifico date se espresse nel formato DD/MM/YYYY */
     char y[S],m[S],d[S];
     int i;
 
@@ -262,11 +265,17 @@ int verificaFormato(char date[]){
             date[i]=' ';
 
     if(sscanf(date,"%s %s %s",y,m,d)==3){
-        //printf("%s %s %s",y,m,d);
+
+        if(strlen(y)==4 && strlen(m)==2 && strlen(d)==2)
+            return 1;
+        else if (strlen(y)==2 && strlen(m)==2 && strlen(d)==4){
+            sprintf(date,"%s/%s/%s",d,m,y);
+        }
+
         for(i=0; i<strlen(date); i++)
         if(date[i]==' ')
             date[i]='/';
-        if(strlen(y)==4 && strlen(m)==2 && strlen(d)==2)
+
             return 1;
     }
 return 0;

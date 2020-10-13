@@ -35,6 +35,10 @@ void toMinuscolo(char str[]);
 e_comandi leggiComando(void);
 int creaCorse(Corsa corse[]);
 void selezionaDati(e_comandi c, Corsa corse[], int n);
+void toMaiuscolo(char str[]);
+int testDate(char d1[],char d2[],char d[]);
+int verificaFormato(char date[]);
+
 
 int main()
 {
@@ -93,6 +97,14 @@ void toMinuscolo(char str[]){
     for(i=0; i<l; i++)
         if(str[i]<'a')
          str[i] = tolower(str[i]);
+ return;
+}
+
+void toMaiuscolo(char str[]){
+    int i,l = strlen(str);
+    for(i=0; i<l; i++)
+        if(str[i]>'a')
+         str[i] = toupper(str[i]);
  return;
 }
 
@@ -207,7 +219,8 @@ e_comandi Ritardo (Corsa c[], int n){
         printf("Corse in ritardo dal %s al %s: \n",data1,data2);
         for(i=0; i<n; i++){
             if(testDate(data1,data2,c[i].date) && c[i].delay_time)
-                printf("Codice tratta: %s (da %s a %s) RITARDO %d MINUTI\n\n",c[i].codTratta,c[i].start,c[i].end,c[i].delay_time);
+                printf("Codice tratta: %s (da %s a %s) RITARDO %d MINUTI\n\n",
+                       c[i].codTratta,c[i].start,c[i].end,c[i].delay_time);
         }
 
     }
@@ -217,9 +230,11 @@ e_comandi RitardoTot (Corsa c[], int n){
     e_comandi cod= r_errore;
     int i,r=0;
     char tratta[S];
+
     if(scanf("%s",tratta)==1)
     {
         cod = r_ritardo_tot;
+        toMaiuscolo(tratta);
         printf("Corse in ritardo codice tratta %s: \n",tratta);
         for(i=0; i<n; i++){
             if(!strcmp(c[i].codTratta,tratta)&& c[i].delay_time){
@@ -240,6 +255,8 @@ return 0;
 }
 
 int verificaFormato(char date[]){
+    /*formato data: YYYY/MM/DD 
+    Ricodifico date se espresse nel formato DD/MM/YYYY */
     char y[S],m[S],d[S];
     int i;
 
@@ -248,11 +265,17 @@ int verificaFormato(char date[]){
             date[i]=' ';
 
     if(sscanf(date,"%s %s %s",y,m,d)==3){
-        //printf("%s %s %s",y,m,d);
+
+        if(strlen(y)==4 && strlen(m)==2 && strlen(d)==2)
+            return 1;
+        else if (strlen(y)==2 && strlen(m)==2 && strlen(d)==4){
+            sprintf(date,"%s/%s/%s",d,m,y);
+        }
+
         for(i=0; i<strlen(date); i++)
         if(date[i]==' ')
             date[i]='/';
-        if(strlen(y)==4 && strlen(m)==2 && strlen(d)==2)
+
             return 1;
     }
 return 0;
