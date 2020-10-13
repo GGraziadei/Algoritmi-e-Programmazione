@@ -18,8 +18,7 @@ char end[S];
 //char end_time[S];  La risoluzione del problema non richiede queste informazioni
 int delay_time;
 char date[S];
-/*Tramite il formato
-data è possibile utilizzare la strcmp per confrontare date*/
+/*Tramite il formato data: YYYY/MM/DD è possibile utilizzare la strcmp per confrontare date*/
 }Corsa;
 
 typedef enum {
@@ -27,6 +26,19 @@ r_date, r_partenza, r_capolinea, r_ritardo, r_ritardo_tot, r_fine,r_errore
 }e_comandi;
 
 e_comandi leggiComando(void);
+e_comandi Date (Corsa c[], int n);
+e_comandi Partenza (Corsa c[], int n);
+e_comandi Capolinea (Corsa c[], int n);
+e_comandi Ritardo (Corsa c[], int n);
+e_comandi RitardoTot (Corsa c[], int n);
+void toMinuscolo(char str[]);
+e_comandi leggiComando(void);
+int creaCorse(Corsa corse[]);
+void selezionaDati(e_comandi c, Corsa corse[], int n);
+void toMaiuscolo(char str[]);
+int testDate(char d1[],char d2[],char d[]);
+int verificaFormato(char date[]);
+
 
 int main()
 {
@@ -65,15 +77,14 @@ e_comandi leggiComando(void){
     do{
         printf("---------- MENU DI SELEZIONE ----------\n");
         for(i=0; i<r_errore; i++)printf("%s \n",c_tabella_Comandi[i] );
-        printf("Inserire comando valido come da specifiche: ");
+        printf("Inserire comando come da specifiche sopra indicate: ");
 
          if(scanf("%s",cmd)==1){
             toMinuscolo(cmd);
             c = r_date;
-            while(c<r_errore && strcmp(c_tabella[c],cmd) ) c++;
+            while(c<r_errore && strcmp(c_tabella[c],cmd)!=0 ) c++;
          }
-
-
+         if(c==r_errore)printf("Comando non valido\n\n");
     }while(c == r_errore);
 
     return c;
@@ -89,6 +100,14 @@ void toMinuscolo(char str[]){
  return;
 }
 
+void toMaiuscolo(char str[]){
+    int i,l = strlen(str);
+    for(i=0; i<l; i++)
+        if(str[i]>'a')
+         str[i] = toupper(str[i]);
+ return;
+}
+
 int creaCorse(Corsa corse[]){
     int i,n=0;
     FILE *fp = fopen(LOGFILE,"r");
@@ -99,7 +118,8 @@ int creaCorse(Corsa corse[]){
             corse[i].id  = i;
             corse[i].delay_time = 0;
             fscanf(fp,"%s %s %s %s %*s %*s %d",corse[i].codTratta,corse[i].start,
-                   corse[i].end,corse[i].date,&corse[i].delay_time); /*Informazioni ora partenza ora arrivo non richieste, le salto in lettura*/
+                   corse[i].end,corse[i].date,&corse[i].delay_time);
+                   /*Informazioni ora partenza ora arrivo non richieste, le salto in lettura*/
         }
 
     fclose(fp);
@@ -108,24 +128,148 @@ int creaCorse(Corsa corse[]){
 
 void selezionaDati(e_comandi c, Corsa corse[], int n){
 
-    char str1[S],str2[S];
-    n = scanf("%d %d",str1,str2);
-    char info[r_errore][SS]= {
-    "Inserire intervallo date separate da spazio: ",
-    "Inserire fermata di partenza: ",
-    "Inserire fermata capolinea: ",
-    "Inserire intervallo date separate da spazio: "
+    char c_tabella_Errori[r_errore][SS]= {
+    "Intervallo date mancante o non corretto",
+    "Stazione di partenza partenza mancante o non corretto ",
+    "Capolinea mancante o non corretto",
+    "Intervallo date mancante o non corretto",
+    "Codice tratta mancante o non corretta"
     };
-
+    e_comandi cod=r_errore;
+    /* per come è gestito il menu non esiste un caso default e neppure per il valore
+    r_errore. Se a questo punto non rientro in uno di questi casi elencati: errore
+    Per la gestione degli errori provo uilteriore applicazione enum*/
         switch (c) {
-            case r_date: printf("data");
+            case r_date: cod = Date(corse,n);
              break;
-            default: printf("Errore comando non valido \n");
+            case r_partenza: cod = Partenza(corse,n);
+             break;
+            case r_capolinea: cod = Capolinea(corse,n);
+             break;
+            case r_ritardo: cod = Ritardo(corse,n);
+             break;
+            case r_ritardo_tot: cod =  RitardoTot(corse,n);
+             break;
+            default:exit(-1);
         }
-
-
+    if(cod==r_errore)printf("Errore: %s\n",c_tabella_Errori[c]);
 
 return;
+}
+
+e_comandi Date (Corsa c[], int n){
+    e_comandi cod= r_errore;
+    int i;
+    char data1[S],data2[S];
+
+    if(scanf("%s %s",data1,data2)==2 && verificaFormato(data1) && verificaFormato(data2))
+    {
+        cod = r_date;
+        printf("Corse dal %s al %s: \n",data1,data2);
+        for(i=0; i<n; i++){
+            if(testDate(data1,data2,c[i].date))
+                printf("Codice tratta: %s (da %s a %s)\n\n",c[i].codTratta,c[i].start,c[i].end);
+        }
+
+    }
+    return cod;
+}
+e_comandi Partenza (Corsa c[], int n){
+    e_comandi cod= r_errore;
+     char fermata[S];
+     int i;
+
+    if(scanf("%s",fermata)==1)
+    {
+        cod = r_partenza;
+        printf("Corse da %s\n",fermata);
+        for(i=0; i<n; i++){
+            if(!strcmp(c[i].start,fermata))
+                printf("Codice tratta: %s (da %s a %s)\n\n",c[i].codTratta,c[i].start,c[i].end);
+        }
+
+    }
+    return cod;
+}
+e_comandi Capolinea (Corsa c[], int n){
+    e_comandi cod= r_errore;
+     char fermata[S];
+     int i;
+
+    if(scanf("%s",fermata)==1)
+    {
+        cod = r_capolinea;
+        printf("Corse verso %s\n",fermata);
+        for(i=0; i<n; i++){
+            if(!strcmp(c[i].end,fermata))
+                printf("Codice tratta: %s (da %s a %s)\n\n",c[i].codTratta,c[i].start,c[i].end);
+        }
+
+    }
+    return cod;
+}
+e_comandi Ritardo (Corsa c[], int n){
+    e_comandi cod= r_errore;
+    int i;
+    char data1[S],data2[S];
+
+    if(scanf("%s %s",data1,data2)==2 && verificaFormato(data1) && verificaFormato(data2))
+    {
+        cod = r_ritardo;
+        printf("Corse in ritardo dal %s al %s: \n",data1,data2);
+        for(i=0; i<n; i++){
+            if(testDate(data1,data2,c[i].date) && c[i].delay_time)
+                printf("Codice tratta: %s (da %s a %s) RITARDO %d MINUTI\n\n",c[i].codTratta,c[i].start,c[i].end,c[i].delay_time);
+        }
+
+    }
+    return cod;
+}
+e_comandi RitardoTot (Corsa c[], int n){
+    e_comandi cod= r_errore;
+    int i,r=0;
+    char tratta[S];
+
+    if(scanf("%s",tratta)==1)
+    {
+        cod = r_ritardo_tot;
+        toMaiuscolo(tratta);
+        printf("Corse in ritardo codice tratta %s: \n",tratta);
+        for(i=0; i<n; i++){
+            if(!strcmp(c[i].codTratta,tratta)&& c[i].delay_time){
+                printf("Codice tratta: %s (da %s a %s) RITARDO %d MINUTI\n\n",c[i].codTratta,c[i].start,c[i].end,c[i].delay_time);
+                r = r+c[i].delay_time;
+            }
+        }
+        printf("RITARDO TOTALE PER %s: %dMINUTI\n\n",tratta,r);
+    }
+    return cod;
+}
+
+int testDate(char d1[],char d2[],char d[]){
+    /*verifico se d1<=d<=d2 */
+    if(strcmp(d1,d)<=0 && strcmp(d2,d)>=0)
+        return 1;
+return 0;
+}
+
+int verificaFormato(char date[]){
+    char y[S],m[S],d[S];
+    int i;
+
+    for(i=0; i<strlen(date); i++)
+        if(date[i]=='/')
+            date[i]=' ';
+
+    if(sscanf(date,"%s %s %s",y,m,d)==3){
+        //printf("%s %s %s",y,m,d);
+        for(i=0; i<strlen(date); i++)
+        if(date[i]==' ')
+            date[i]='/';
+        if(strlen(y)==4 && strlen(m)==2 && strlen(d)==2)
+            return 1;
+    }
+return 0;
 }
 
 

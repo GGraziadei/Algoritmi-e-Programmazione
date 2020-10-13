@@ -12,6 +12,11 @@ int ITEMneq (Item A, Item B);
 int ITEMlt (Item A, Item B);
 int ITEMgt (Item A, Item B);
 void ITEMshow (Item A[],int n);
+void stampaSelectionSort(Item A[], int n);
+void stampaInsertionSort(Item A[], int n);
+void stampaShellSort(Item A[], int n);
+void scambiaItem (Item *pa, Item *pb);
+
 
 
 int main()
