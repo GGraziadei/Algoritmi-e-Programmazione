@@ -14,9 +14,9 @@
 
 typedef struct{
 int l;
+int occNow;
 int occIndex [MAX_WORD];
 char words[MAX_WORD][SP];
-int occNow;
 char seq [SC];
 }Sequenza;
 
@@ -76,13 +76,16 @@ void trovaOccorrenze (Sequenza p[],int n){
 
             for(i=0; i<l; i++){ /* Costruzione words riga*/
 
-                if( isspace(str[i])  || (ispunct(str[i])&& str[i]!=' ') ){
+                if( isspace(str[i])  || ispunct(str[i]) ){
 
-                    /* j n+1 degli alnum prima della terminazione i �
-                    l'indice del carattere da saltare
-                    j "si muove come una molla", tramite conteggio di caratteri
-                    e contestuale rilascio in word
-                    Sal vo in ii i j ovvero il numero dei caratteri selezionati*/
+                    /*
+                    i è l'indice del carattere di terminazione
+                    j  conteggia i caratteri letti e contestualmente rilasciati in word
+                    Salvo in ii il numero dei caratteri selezionati
+                    I caratteri non standard ASCII sicuramente non costituiscono parte di un parola
+                    essendo questa per definizione composta da alnum contigui, una volta riconosciuti
+                    ricodifico con uno spazio e mando il ciclo indietro di 1.
+                    */
 
                     for(ii=j,jj=0; jj<ii && str[i-j]!=' '; jj++,j--)
                         word[jj]=str[i-j];
@@ -100,8 +103,8 @@ void trovaOccorrenze (Sequenza p[],int n){
 
                                 for(m=0; m<n; m++){
                                     if(p[m].l<=ll && p[m].occNow <MAX_WORD && p[m].occIndex[p[m].occNow-1] != parole){
-                                    /* Verifico compatibilit� alla strncmp
-                                    con (p[m].occIndex[p[m].occNow-1] != parole) verifico che l'occorrenza non sia stata gi� segnata per
+                                    /* Verifico compatibilità alla strncmp
+                                    con (p[m].occIndex[p[m].occNow-1] != parole) verifico che l'occorrenza non sia già stata
                                     processata per la word. */
                                       if(!strncmp(strTest,p[m].seq,p[m].l)){
                                         strcpy(p[m].words[p[m].occNow],wordCpy);
@@ -114,10 +117,7 @@ void trovaOccorrenze (Sequenza p[],int n){
                       }
                 }
                 else if (isalnum(str[i])) j=j+1;
-                else {
-                  /* Se non � un carattere di mia competenza lo sostituisco con spazio
-                   e decremento i, questa procedura non � risuttiva in quanto si definisce word
-                   sequenza di alnum contigui */
+                else { //Altrimenti carattere non standard ASCII lo ricodifico con uno spazio
                   str[i]=' ';
                   i = i-1;
                 }
@@ -135,7 +135,7 @@ void stampaRes (Sequenza p[], int n){
     for(i=0; i<n; i++){//sequenza
     /* If condizionale <condizione> ? <Se_Vero>:<Se_falso>*/
     printf("Sequenza %s",p[i].seq);
-    printf("%s",p[i].occNow>=1?" contenuta in: ":" non presenta occorrenze");
+    printf("%s",p[i].occNow>=1?" contenuta in: ":" non presenta occorrenze.");
 
         for(jj=0; jj<p[i].occNow && p[i].occIndex[jj]>0; jj++){//word_sequenza
             printf("%s (Parola in posizione %d)%c ",p[i].words[jj],p[i].occIndex[jj],

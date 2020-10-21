@@ -11,12 +11,12 @@
 
 typedef struct{
 int id;
+int delay_time;
 char codTratta[S];
 char start[S];
 char end[S];
-//char start_time[S];
-//char end_time[S];  La risoluzione del problema non richiede queste informazioni
-int delay_time;
+char start_time[S];
+char end_time[S];
 char date[S];
 /*Tramite il formato data: YYYY/MM/DD è possibile utilizzare la strcmp per confrontare date*/
 }Corsa;
@@ -32,12 +32,12 @@ e_comandi Capolinea (Corsa c[], int n);
 e_comandi Ritardo (Corsa c[], int n);
 e_comandi RitardoTot (Corsa c[], int n);
 void toMinuscolo(char str[]);
-e_comandi leggiComando(void);
 int creaCorse(Corsa corse[]);
 void selezionaDati(e_comandi c, Corsa corse[], int n);
 void toMaiuscolo(char str[]);
 int testDate(char d1[],char d2[],char d[]);
 int verificaFormato(char date[]);
+void stampaTratta(Corsa c);
 
 
 int main()
@@ -75,6 +75,7 @@ e_comandi leggiComando(void){
     };
 
     do{
+
         printf("---------- MENU DI SELEZIONE ----------\n");
         for(i=0; i<r_errore; i++)printf("%s \n",c_tabella_Comandi[i] );
         printf("Inserire comando come da specifiche sopra indicate: ");
@@ -84,7 +85,12 @@ e_comandi leggiComando(void){
             c = r_date;
             while(c<r_errore && strcmp(c_tabella[c],cmd)!=0 ) c++;
          }
-         if(c==r_errore)printf("Comando non valido\n\n");
+         if(c==r_errore){
+                printf("Comando non valido\n\n");
+                fgets(cmd,S,stdin); /*fine lettura comando precedente,
+                predispongo cmd per ricevere un nuovo comando.*/
+
+         }
     }while(c == r_errore);
 
     return c;
@@ -117,9 +123,8 @@ int creaCorse(Corsa corse[]){
         for(i=0; i<n; i++){
             corse[i].id  = i;
             corse[i].delay_time = 0;
-            fscanf(fp,"%s %s %s %s %*s %*s %d",corse[i].codTratta,corse[i].start,
-                   corse[i].end,corse[i].date,&corse[i].delay_time);
-                   /*Informazioni ora partenza ora arrivo non richieste, le salto in lettura*/
+            fscanf(fp,"%s %s %s %s %s %s %d",corse[i].codTratta,corse[i].start,
+                   corse[i].end,corse[i].date,corse[i].start_time,corse[i].end_time,&corse[i].delay_time);
         }
 
     fclose(fp);
@@ -130,15 +135,15 @@ void selezionaDati(e_comandi c, Corsa corse[], int n){
 
     char c_tabella_Errori[r_errore][SS]= {
     "Intervallo date mancante o non corretto",
-    "Stazione di partenza partenza mancante o non corretto ",
+    "Stazione di partenza mancante o non corretta",
     "Capolinea mancante o non corretto",
     "Intervallo date mancante o non corretto",
     "Codice tratta mancante o non corretta"
     };
     e_comandi cod=r_errore;
     /* per come è gestito il menu non esiste un caso default e neppure per il valore
-    r_errore. Se a questo punto non rientro in uno di questi casi elencati: errore
-    Per la gestione degli errori provo uilteriore applicazione enum*/
+    r_errore. Se a questo punto non rientro in uno di questi casi elencati: errore.
+    Provo ulteriore applicazione enum sulla visualizzazione errori*/
         switch (c) {
             case r_date: cod = Date(corse,n);
              break;
@@ -152,6 +157,10 @@ void selezionaDati(e_comandi c, Corsa corse[], int n){
              break;
             default:exit(-1);
         }
+
+        /*Gli ulteriori parametri del comando sono acquisiti in lettura da
+        stdin*/
+
     if(cod==r_errore)printf("Errore: %s\n",c_tabella_Errori[c]);
 
 return;
@@ -160,32 +169,36 @@ return;
 e_comandi Date (Corsa c[], int n){
     e_comandi cod= r_errore;
     int i;
-    char data1[S],data2[S];
-
-    if(scanf("%s %s",data1,data2)==2 && verificaFormato(data1) && verificaFormato(data2))
-    {
-        cod = r_date;
-        printf("Corse dal %s al %s: \n",data1,data2);
-        for(i=0; i<n; i++){
-            if(testDate(data1,data2,c[i].date))
-                printf("Codice tratta: %s (da %s a %s)\n\n",c[i].codTratta,c[i].start,c[i].end);
-        }
-
+    char data1[S],data2[S],cmd[S];
+    gets(cmd); /* Salto al comando successivo eventuali errori di formattazione input derivanti da questo */
+    if(sscanf(cmd,"%s %s",data1,data2)==2 && verificaFormato(data1) && verificaFormato(data2)){
+      if(strcmp(data1,data2) <= 0){
+            cod = r_date;
+            printf("Corse dal %s al %s: \n",data1,data2);
+            for(i=0; i<n; i++){
+                if(testDate(data1,data2,c[i].date))
+                   stampaTratta(c[i]);
+            }
+      }
     }
     return cod;
 }
 e_comandi Partenza (Corsa c[], int n){
     e_comandi cod= r_errore;
      char fermata[S];
+     char fermataTest[S],cmd[S];
      int i;
-
-    if(scanf("%s",fermata)==1)
+    gets(cmd);
+    if(sscanf(cmd,"%s",fermata)==1)
     {
         cod = r_partenza;
         printf("Corse da %s\n",fermata);
+        toMinuscolo(fermata);
         for(i=0; i<n; i++){
-            if(!strcmp(c[i].start,fermata))
-                printf("Codice tratta: %s (da %s a %s)\n\n",c[i].codTratta,c[i].start,c[i].end);
+          strcpy(fermataTest,c[i].start);
+          toMinuscolo(fermataTest);
+            if(!strcmp(fermataTest,fermata))
+                stampaTratta(c[i]);
         }
 
     }
@@ -193,16 +206,20 @@ e_comandi Partenza (Corsa c[], int n){
 }
 e_comandi Capolinea (Corsa c[], int n){
     e_comandi cod= r_errore;
-     char fermata[S];
+     char fermata[S],fermataTest[S],cmd[S];
+
      int i;
 
     if(scanf("%s",fermata)==1)
     {
         cod = r_capolinea;
         printf("Corse verso %s\n",fermata);
+        toMinuscolo(fermata);
         for(i=0; i<n; i++){
-            if(!strcmp(c[i].end,fermata))
-                printf("Codice tratta: %s (da %s a %s)\n\n",c[i].codTratta,c[i].start,c[i].end);
+           strcpy(fermataTest,c[i].end);
+           toMinuscolo(fermataTest);
+            if(!strcmp(fermataTest,fermata))
+                stampaTratta(c[i]);
         }
 
     }
@@ -215,12 +232,13 @@ e_comandi Ritardo (Corsa c[], int n){
 
     if(scanf("%s %s",data1,data2)==2 && verificaFormato(data1) && verificaFormato(data2))
     {
-        cod = r_ritardo;
-        printf("Corse in ritardo dal %s al %s: \n",data1,data2);
-        for(i=0; i<n; i++){
-            if(testDate(data1,data2,c[i].date) && c[i].delay_time)
-                printf("Codice tratta: %s (da %s a %s) RITARDO %d MINUTI\n\n",
-                       c[i].codTratta,c[i].start,c[i].end,c[i].delay_time);
+        if(strcmp(data1,data2) <= 0){
+            cod = r_ritardo;
+            printf("Corse in ritardo dal %s al %s: \n",data1,data2);
+            for(i=0; i<n; i++){
+                if(testDate(data1,data2,c[i].date) && c[i].delay_time)
+                    stampaTratta(c[i]);
+            }
         }
 
     }
@@ -238,11 +256,11 @@ e_comandi RitardoTot (Corsa c[], int n){
         printf("Corse in ritardo codice tratta %s: \n",tratta);
         for(i=0; i<n; i++){
             if(!strcmp(c[i].codTratta,tratta)&& c[i].delay_time){
-                printf("Codice tratta: %s (da %s a %s) RITARDO %d MINUTI\n\n",c[i].codTratta,c[i].start,c[i].end,c[i].delay_time);
+                //stampaTratta(c[i]);
                 r = r+c[i].delay_time;
             }
         }
-        printf("RITARDO TOTALE PER %s: %dMINUTI\n\n",tratta,r);
+        printf("RITARDO TOTALE PER %s: %d MINUTI\n\n",tratta,r);
     }
     return cod;
 }
@@ -255,7 +273,7 @@ return 0;
 }
 
 int verificaFormato(char date[]){
-    /*formato data: YYYY/MM/DD 
+    /*formato data: YYYY/MM/DD
     Ricodifico date se espresse nel formato DD/MM/YYYY */
     char y[S],m[S],d[S];
     int i;
@@ -269,7 +287,7 @@ int verificaFormato(char date[]){
         if(strlen(y)==4 && strlen(m)==2 && strlen(d)==2)
             return 1;
         else if (strlen(y)==2 && strlen(m)==2 && strlen(d)==4){
-            sprintf(date,"%s/%s/%s",d,m,y);
+            sprintf(date,"%s/%s/%s",d,m,y);/*sono certo che la stringa non varia la sua dimensione */
         }
 
         for(i=0; i<strlen(date); i++)
@@ -281,4 +299,11 @@ int verificaFormato(char date[]){
 return 0;
 }
 
+
+void stampaTratta(Corsa c){
+    printf("\n");
+    printf("%s da %s a %s del %s PARTENZA: %s ARRIVO: %s RITARDO: %d %s\n\n",c.codTratta,c.start,
+        c.end,c.date,c.start_time,c.end_time,c.delay_time,c.delay_time==1?"minuto":"minuti");
+ return;
+}
 
