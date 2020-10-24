@@ -108,7 +108,6 @@ int ricodifica (Dizionario d[], FILE* sorgente, FILE* out, int S){
           trovato = 0;
           for(k=0; k<S && !trovato; k++){ //Verifica dizionario
                 if(tmp_str[i]==d[k].originale[0] && (ii - i)>=d[k].l){ //Verifica compatibilità
-                    /* Algoritmo estrapolato da pagina 50 Dal problema al programma */
                     ps = &(tmp_str[i]);
                     if(! strncmp(d[k].originale,ps,d[k].l)){
                         trovato = d[k].l; //Ovvero la lunghezza della sostituzione

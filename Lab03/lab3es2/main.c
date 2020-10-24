@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define VISUALIZZA_MEM 0 /* ?visualizza la disposizione dei bit in memoria */
+#define VISUALIZZA_MEM 0 /* ?visualizza la disposizione dei bit in memoria. Stampa lettura del byte */
 #define NUM_TEST -2130706177
 
 typedef enum{
@@ -54,10 +54,10 @@ int main()
 
 void stampaCodifica (void *p, int size, int bigEndian){
     unsigned char *numP = p;
-    int numV,e,i=0,j=0,exp,countBit=1,paddingByte;
-    exp = typeExp(size,&paddingByte);
+    int numV,e,i=0,j=0,exp,countBit,start=0,isLongDouble=0;
+    exp = typeExp(size,&isLongDouble);
 
-    i = 1+paddingByte;
+    i = 1;
 
     /* i indica il byte in lettura
     j il bit in lettura*/
@@ -69,52 +69,59 @@ void stampaCodifica (void *p, int size, int bigEndian){
         else
           numP = p+i-1;
         numV = *numP;
-        if(VISUALIZZA_MEM)printf(" %d => %d  ",i,numV);
+        if(VISUALIZZA_MEM)printf(" BYTE %d => %d  ",i,numV);
         i = i+1;
-        /*Calcolo i bit notevoli del byte */
-        countBit =2; /*(2)base10 = (10)base2 quindi 2 bit*/
-        for(e=2; 2*e<=numV; e=e*2)
-          countBit++;
+        if(!start && numV==255)
+            continue; /*Non è rappresentabile un numero con exp 11111....111
+            Se rilevo questo vuol dire che sono bit di padding. Saltato il padding
+            non effettuo più il controllo*/
+        start = 1;
+
+            /*Calcolo i bit notevoli del byte */
+            countBit =2; /*(2)base10 = (10)base2 quindi 2 bit*/
+            for(e=2; 2*e<=numV; e=e*2)
+              countBit++;
 
 
-        while((8-countBit)!=0){
-            printf("0");
-            j=j+1;
-            countBit++;
-             if(j==1 || j==1+exp)
-                printf(" ");
-             if(paddingByte && j==exp+2)
-                printf(" ");/*x86 extended precision*/
-        }
-
-        while(e>0){
-           if(e<=numV){
-             printf("1");
-             numV=numV%e;
-            }
-            else {
-              printf("0");
+            while((8-countBit)!=0){
+                printf("0");
+                j=j+1;
+                countBit++;
+                 if(j==1 || j==1+exp)
+                    printf(" ");
+                 if(isLongDouble && j==exp+2)
+                    printf(" ");/*x86 extended precision*/
             }
 
-            e = e/2;
-            j=j+1; //indica il bit
+            while(e>0){
+               if(e<=numV){
+                 printf("1");
+                 numV=numV%e;
+                }
+                else {
+                  printf("0");
+                }
 
-              if(j==1 || j==1+exp )
-                printf(" ");
-              if(paddingByte && j==exp+2)
-                printf(" ");
+                e = e/2;
+                j=j+1; //indica il bit
 
-        }
+                  if(j==1 || j==1+exp )
+                    printf(" ");
+                  if(isLongDouble && j==exp+2)
+                    printf(" ");
+
+            }
+
       }
 
 return;
 }
 
-int typeExp (int size, int *padding){
+int typeExp (int size,int *testLongDouble){
 
-    int mantissa=0,esponente=0; /*bit per ogni informazione*/
+    int mantissa=0,esponente=0,paddingByte=0; /*bit per ogni informazione*/
     sel_type type = float_type;
-    int ieee_754[3]={4,8,12};/* long double codificati su 10byte*/
+    int ieee_754[3]={4,8,12};/* long double codificati su 10byte con 2 byte di padding*/
     char type_ieee_754[3][30]={"FLOAT","DOUBLE","LONG DOUBLE"};
     while(type<=error_type && size!=ieee_754[type])
         type=type+1;
@@ -130,13 +137,28 @@ int typeExp (int size, int *padding){
       case error_type:exit(-1);
     }
 
-    if(type==long_double_type)
-        *padding =2;
-    else *padding=0;
+    if(type==long_double_type){
+        paddingByte=2; /*Solo per stampa, non influente sul codice superiore*/
+        *testLongDouble = 1;
+    }
 
-    mantissa = size*8-esponente-1-*padding*8;
-    printf("\nCODIFICA: %s\nBits esponente: %d Bits mantissa: %d Padding bits: %d\n",type_ieee_754[type],esponente,mantissa,*padding*8);
+    mantissa = size*8-esponente-1-paddingByte*8;
+    printf("\n\nCODIFICA: %s\nBit esponente: %d Bit mantissa: %d Padding bit: %d\n",type_ieee_754[type],esponente,mantissa,paddingByte*8);
 
+    if(type==long_double_type){
+        printf("Formato x86 extended precision\n");
+        printf("s %-15s %-64s\n","exp","mantissa");
+    }
+
+    if(type== double_type){
+        printf("s %-11s %-52s\n","exp","mantissa");
+    }
+
+    if(type==float_type){
+        printf("s %-8s %-23s\n","exp","mantissa");
+    }
 
     return esponente;
 }
+
+

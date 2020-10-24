@@ -8,14 +8,6 @@
 
 
 typedef struct {
-/* il vertice in alto a sx ha coordinate i[0],j[0]
-il vertice in basso a dx ha coordinate i[1]-1,j[1]-1
-altezzaRegione i[1]-i[0]
-larghezzaRegione j[1]-j[0]
-areaRegione (i[1]-i[0]) * (j[1]-j[0])
-Tutte le informazioni sono espresse in funzione degli indici
-Le regioni sono al più N
-*/
 int r;
 int c;
 int base;

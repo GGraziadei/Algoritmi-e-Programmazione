@@ -254,7 +254,7 @@ e_comandi RitardoTot (Corsa c[], int n){
     {
         cod = r_ritardo_tot;
         toMaiuscolo(tratta);
-        printf("Corse in ritardo codice tratta %s: \n",tratta);
+        //printf("Corse in ritardo codice tratta %s: \n",tratta);
         for(i=0; i<n; i++){
             if(!strcmp(c[i].codTratta,tratta)&& c[i].delay_time){
                 //stampaTratta(c[i]);

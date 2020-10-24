@@ -13,7 +13,7 @@ il vertice in basso a dx ha coordinate i[1]-1,j[1]-1
 altezzaRegione i[1]-i[0]
 larghezzaRegione j[1]-j[0]
 areaRegione (i[1]-i[0]) * (j[1]-j[0])
-Tutte le informazioni sono espresse in funzione degli indici
+Tutte le informazioni sono esprimibili in funzione degli indici
 Le regioni sono al più N
 */
 int r;
