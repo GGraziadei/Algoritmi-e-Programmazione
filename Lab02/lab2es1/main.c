@@ -112,8 +112,8 @@ int cercaRegioni(Regione r[],int mappa[][N],int nr,int nc, int *A,int *H,int *L)
                     *A = n;
                 }
 
-                printf("Regione %d @ (%d,%d)-> (%d,%d)\n",n,r[n].i[0],r[n].j[0],r[n].i[1]-1,r[n].j[1]-1);
-                stampaRes(r[n]);
+                //printf("Regione %d @ (%d,%d)-> (%d,%d)\n",n,r[n].i[0],r[n].j[0],r[n].i[1]-1,r[n].j[1]-1);
+                //stampaRes(r[n]);
                 n = n+1;
 
             }

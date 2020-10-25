@@ -207,10 +207,9 @@ e_comandi Partenza (Corsa c[], int n){
 e_comandi Capolinea (Corsa c[], int n){
     e_comandi cod= r_errore;
      char fermata[S],fermataTest[S],cmd[S];
-
      int i;
-
-    if(scanf("%s",fermata)==1)
+    gets(cmd); /* Salto al comando successivo eventuali errori di formattazione input derivanti da questo */
+    if(sscanf(cmd,"%s",fermata)==1)
     {
         cod = r_capolinea;
         printf("Corse verso %s\n",fermata);
@@ -228,9 +227,10 @@ e_comandi Capolinea (Corsa c[], int n){
 e_comandi Ritardo (Corsa c[], int n){
     e_comandi cod= r_errore;
     int i;
-    char data1[S],data2[S];
+    char data1[S],data2[S],cmd[S];
+    gets(cmd); /* Salto al comando successivo eventuali errori di formattazione input derivanti da questo */
 
-    if(scanf("%s %s",data1,data2)==2 && verificaFormato(data1) && verificaFormato(data2))
+    if(sscanf(cmd,"%s %s",data1,data2)==2 && verificaFormato(data1) && verificaFormato(data2))
     {
         if(strcmp(data1,data2) <= 0){
             cod = r_ritardo;
@@ -247,13 +247,14 @@ e_comandi Ritardo (Corsa c[], int n){
 e_comandi RitardoTot (Corsa c[], int n){
     e_comandi cod= r_errore;
     int i,r=0;
-    char tratta[S];
+    char tratta[S],cmd[S];
+    gets(cmd); /* Salto al comando successivo eventuali errori di formattazione input derivanti da questo */
 
-    if(scanf("%s",tratta)==1)
+    if(sscanf(cmd,"%s",tratta)==1)
     {
         cod = r_ritardo_tot;
         toMaiuscolo(tratta);
-        printf("Corse in ritardo codice tratta %s: \n",tratta);
+        //printf("Corse in ritardo codice tratta %s: \n",tratta);
         for(i=0; i<n; i++){
             if(!strcmp(c[i].codTratta,tratta)&& c[i].delay_time){
                 //stampaTratta(c[i]);

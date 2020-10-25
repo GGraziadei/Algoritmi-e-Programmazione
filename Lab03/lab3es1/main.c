@@ -8,14 +8,6 @@
 
 
 typedef struct {
-/* il vertice in alto a sx ha coordinate i[0],j[0]
-il vertice in basso a dx ha coordinate i[1]-1,j[1]-1
-altezzaRegione i[1]-i[0]
-larghezzaRegione j[1]-j[0]
-areaRegione (i[1]-i[0]) * (j[1]-j[0])
-Tutte le informazioni sono esprimibili in funzione degli indici
-Le regioni sono al più N
-*/
 int r;
 int c;
 int base;
@@ -65,13 +57,13 @@ void leggiMatrice (int M[][MAXR], int *nr,int *nc){
          /* puntatore al primo elemento di riga i-esima */
             for(j=0;j<*nc;j++){
                 fscanf(fp,"%d ",(riga+j));
-                printf("%d  ", *(riga+j));
+                //printf("%d  ", *(riga+j));
                 if(*(riga+j)!= 0 && *(riga+j)!= 1){
                     printf("Verificare file riga %d colonna %d",i+1,j+1);
                     exit(-1);
                 }
             }
-            printf("\n");
+            //printf("\n");
         }
 
 
@@ -138,8 +130,6 @@ int riconosciRegione (int M[][MAXR],int nr, int nc,int r,int c,int*b,int*h){
     int ii,jj;
 
     if(M[r][c]== 1){
-                /*Definisco regione qualsiasi rettangolo anche quadrato
-                di dimensione 1x1 */
                 for(ii=r; ii<nr && M[ii][c]==1; ii++);
                 for(jj=c; jj<nc && M[r][jj]==1; jj++);
                 *b = jj-c;

@@ -7,7 +7,7 @@
 #define N 1000
 #define S 30+1
 #define SS 300+1
-#define ANNO_START 2000
+
 
 typedef struct{
 int id;
@@ -132,7 +132,7 @@ int creaCorse(Corsa corse[]){
 }
 
 void selezionaDati(e_comandi c, Corsa corse[], int n){
-
+    /* Provo ulteriore applicazione enum sulla visualizzazione errori*/
     char c_tabella_Errori[r_errore][SS]= {
     "Intervallo date mancante o non corretto",
     "Stazione di partenza mancante o non corretta",
@@ -141,9 +141,6 @@ void selezionaDati(e_comandi c, Corsa corse[], int n){
     "Codice tratta mancante o non corretta"
     };
     e_comandi cod=r_errore;
-    /* per come è gestito il menu non esiste un caso default e neppure per il valore
-    r_errore. Se a questo punto non rientro in uno di questi casi elencati: errore.
-    Provo ulteriore applicazione enum sulla visualizzazione errori*/
         switch (c) {
             case r_date: cod = Date(corse,n);
              break;

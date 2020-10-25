@@ -57,13 +57,13 @@ void leggiMatrice (int M[][MAXR], int *nr,int *nc){
          /* puntatore al primo elemento di riga i-esima */
             for(j=0;j<*nc;j++){
                 fscanf(fp,"%d ",(riga+j));
-                printf("%d  ", *(riga+j));
+                //printf("%d  ", *(riga+j));
                 if(*(riga+j)!= 0 && *(riga+j)!= 1){
                     printf("Verificare file riga %d colonna %d",i+1,j+1);
                     exit(-1);
                 }
             }
-            printf("\n");
+            //printf("\n");
         }
 
 
@@ -130,8 +130,6 @@ int riconosciRegione (int M[][MAXR],int nr, int nc,int r,int c,int*b,int*h){
     int ii,jj;
 
     if(M[r][c]== 1){
-                /*Definisco regione qualsiasi rettangolo anche quadrato
-                di dimensione 1x1 */
                 for(ii=r; ii<nr && M[ii][c]==1; ii++);
                 for(jj=c; jj<nc && M[r][jj]==1; jj++);
                 *b = jj-c;

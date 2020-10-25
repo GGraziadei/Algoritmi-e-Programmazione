@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define VISUALIZZA_MEM 0 /* ?visualizza la disposizione dei bit in memoria. Stampa lettura del byte */
+#define VISUALIZZA_MEM 0 /* Stampa lettura del byte in base 10*/
 #define NUM_TEST -2130706177
+
 
 typedef enum{
 float_type,double_type,long_double_type,error_type}sel_type;
@@ -18,7 +19,9 @@ float_type,double_type,long_double_type,error_type}sel_type;
   */
 
 void stampaCodifica (void *p, int size, int bigEndian);
-int typeExp (int size, int*);
+int typeExp (int size, sel_type *type);
+int paddingCalc(int bigEndian);
+
 
 int main()
 {
@@ -28,6 +31,8 @@ int main()
 
     if( *((char *)&bigEndian)==-1)
         bigEndian = 0;
+    else bigEndian = 1;
+
     float af;
     double ad;
     long double ald;
@@ -54,10 +59,16 @@ int main()
 
 void stampaCodifica (void *p, int size, int bigEndian){
     unsigned char *numP = p;
-    int numV,e,i=0,j=0,exp,countBit,start=0,isLongDouble=0;
-    exp = typeExp(size,&isLongDouble);
+    int numV,e,i=0,j=0,exp,countBit,paddingByte;
+    sel_type type;
+    exp = typeExp(size,&type);
 
-    i = 1;
+    if(type == long_double_type)
+     paddingByte = paddingCalc(bigEndian);
+    else
+     paddingByte = 0;
+
+    i = 1+paddingByte;
 
     /* i indica il byte in lettura
     j il bit in lettura*/
@@ -71,11 +82,7 @@ void stampaCodifica (void *p, int size, int bigEndian){
         numV = *numP;
         if(VISUALIZZA_MEM)printf(" BYTE %d => %d  ",i,numV);
         i = i+1;
-        if(!start && numV==255)
-            continue; /*Non è rappresentabile un numero con exp 11111....111
-            Se rilevo questo vuol dire che sono bit di padding. Saltato il padding
-            non effettuo più il controllo*/
-        start = 1;
+
 
             /*Calcolo i bit notevoli del byte */
             countBit =2; /*(2)base10 = (10)base2 quindi 2 bit*/
@@ -89,7 +96,7 @@ void stampaCodifica (void *p, int size, int bigEndian){
                 countBit++;
                  if(j==1 || j==1+exp)
                     printf(" ");
-                 if(isLongDouble && j==exp+2)
+                 if(type==long_double_type && j==exp+2)
                     printf(" ");/*x86 extended precision*/
             }
 
@@ -107,7 +114,7 @@ void stampaCodifica (void *p, int size, int bigEndian){
 
                   if(j==1 || j==1+exp )
                     printf(" ");
-                  if(isLongDouble && j==exp+2)
+                  if(type==long_double_type && j==exp+2)
                     printf(" ");
 
             }
@@ -117,17 +124,17 @@ void stampaCodifica (void *p, int size, int bigEndian){
 return;
 }
 
-int typeExp (int size,int *testLongDouble){
+int typeExp (int size, sel_type *type){
 
     int mantissa=0,esponente=0,paddingByte=0; /*bit per ogni informazione*/
-    sel_type type = float_type;
-    int ieee_754[3]={4,8,12};/* long double codificati su 10byte con 2 byte di padding*/
+    *type = float_type;
+    int ieee_754[3]={sizeof(float),sizeof(double),sizeof(long double)};/* long double codificati su 10byte con 2 byte di padding*/
     char type_ieee_754[3][30]={"FLOAT","DOUBLE","LONG DOUBLE"};
-    while(type<=error_type && size!=ieee_754[type])
-        type=type+1;
+    while(*type<=error_type && size!=ieee_754[*type])
+        *type=*type+1;
 
 
-    switch (type){
+    switch (*type){
      case float_type:esponente=8;
       break;
      case double_type:esponente=11;
@@ -137,24 +144,24 @@ int typeExp (int size,int *testLongDouble){
       case error_type:exit(-1);
     }
 
-    if(type==long_double_type){
-        paddingByte=2; /*Solo per stampa, non influente sul codice superiore*/
-        *testLongDouble = 1;
+    /*Stampa info sul formato.*/
+    if(*type==long_double_type){
+        paddingByte=2;
     }
-
     mantissa = size*8-esponente-1-paddingByte*8;
-    printf("\n\nCODIFICA: %s\nBit esponente: %d Bit mantissa: %d Padding bit: %d\n",type_ieee_754[type],esponente,mantissa,paddingByte*8);
 
-    if(type==long_double_type){
+    printf("\n\nCODIFICA: %s\nBit esponente: %d Bit mantissa: %d\n",type_ieee_754[*type],esponente,mantissa);
+
+    if(*type==long_double_type){
         printf("Formato x86 extended precision\n");
         printf("s %-15s %-64s\n","exp","mantissa");
     }
 
-    if(type== double_type){
+    if(*type== double_type){
         printf("s %-11s %-52s\n","exp","mantissa");
     }
 
-    if(type==float_type){
+    if(*type==float_type){
         printf("s %-8s %-23s\n","exp","mantissa");
     }
 
@@ -162,3 +169,24 @@ int typeExp (int size,int *testLongDouble){
 }
 
 
+int paddingCalc(int bigEndian){
+    /*
+    Verifica dei byte di padding per type: LONG DOUBLE
+    Rapp. binaria primo byte.
+    1=> 00111111(63)10 [...]
+    0=> 00000000(0)10  [...]
+    Fin quando il valore del byte è lo stesso per i due long double sto leggendo dei byte di padding.
+    */
+    long double num1=1,num2=0;
+
+    int i,size=sizeof(num1);
+    char *Pnum1=( char *)&num1,*Pnum2=( char *)&num2;
+
+    if(!bigEndian)
+        for(i=1; i<=size && (*(Pnum1+size-i) == *(Pnum2+size-i)); i++);
+    else
+        for(i=0; i<size && (*(Pnum1+i) == *(Pnum2+i)); i++);
+
+    printf("(Salto %d byte di padding)\n",i-1);
+    return (i-1);
+}
