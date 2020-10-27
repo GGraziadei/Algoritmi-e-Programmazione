@@ -16,21 +16,22 @@ int altezza;
 
 void leggiMatrice (int M[][MAXR], int *nr,int *nc);
 void stampaRes (Regione);
-int cercaRegioni(Regione*,int mappa[][N],int,int,int*,int*,int*);
+int cercaRegioni(Regione*,int mappa[][N],int,int);
 int riconosciRegione (int M[][MAXR],int nr, int nc,int r,int c,int*b,int*h);
-
+void trovaMax(Regione r[], int *A,int *H,int *L,int n);
 int main()
 {
     int maxH,maxA,maxL,nRegioni,nr,nc,M[MAXR][MAXR];
     Regione regioni[N];
+    maxH = maxA = maxL = 0;
 
     leggiMatrice (M,&nr,&nc);
     /*Identifico in stampa una regione con un vettore diagonale
     applicato nel vertice il alto a sx il quale punta al vertice in basso a destra della regione
     I vettori sono epsressi in un SR che ha l'asse delle y verso il basso*/
-    nRegioni = cercaRegioni(regioni,M,nr,nc,&maxA,&maxH,&maxL);
-    printf("------- Numero regioni acquisite: %d -------\n\n",nRegioni);
-    printf("Max Base: ");    stampaRes(regioni[maxL]);
+    nRegioni = cercaRegioni(regioni,M,nr,nc);
+    trovaMax (regioni,&maxA,&maxH,&maxL,nRegioni);
+    printf("\nMax Base: ");    stampaRes(regioni[maxL]);
     printf("Max Area: ");    stampaRes(regioni[maxA]);
     printf("Max Altezza: "); stampaRes(regioni[maxH]);
 
@@ -50,20 +51,20 @@ void leggiMatrice (int M[][MAXR], int *nr,int *nc){
 
         }while(fp == NULL);
 
-        fscanf(fp,"%d %d",nr,nc);
-        riga = (int*)*(M[0]);
+        if( fscanf(fp,"%d %d",nr,nc) == EOF ) exit(-1);
+
         for(i=0;i<*nr; i++){
-         riga = (int *)&(M[i]);
-         /* puntatore al primo elemento di riga i-esima */
+         riga = M[i];
+         /* puntatore alla riga i-esima
+         equivale a &(M[i][0])*/
             for(j=0;j<*nc;j++){
-                fscanf(fp,"%d ",(riga+j));
-                //printf("%d  ", *(riga+j));
+                if( fscanf(fp,"%d ",(riga+j)) == EOF)
+                    exit(-1);
                 if(*(riga+j)!= 0 && *(riga+j)!= 1){
                     printf("Verificare file riga %d colonna %d",i+1,j+1);
                     exit(-1);
                 }
             }
-            //printf("\n");
         }
 
 
@@ -72,10 +73,10 @@ void leggiMatrice (int M[][MAXR], int *nr,int *nc){
 return;
 }
 
-int cercaRegioni(Regione r[],int mappa[][MAXR],int nr,int nc, int *A,int *H,int *L){
-    int ii,jj,i,j,a,h,l,ll,hh,aa,n =0; //n indice del vettore Regione r[]
-    a = l = h = *A = *H = *L =0;
+int cercaRegioni(Regione r[],int mappa[][MAXR],int nr,int nc){
+    int ii,jj,i,j,ll,hh,n =0; //n indice del vettore Regione r[]
 
+    printf("Riconosci Regione: \n");
     for(i=0; i<nr; i++){
         for(j=0; j<nc; j++){
             if(riconosciRegione(mappa,nr,nc,i,j,&ll,&hh)){
@@ -84,31 +85,11 @@ int cercaRegioni(Regione r[],int mappa[][MAXR],int nr,int nc, int *A,int *H,int 
                 r[n].c = j;
                 r[n].base = ll;
                 r[n].altezza = hh;
-                aa = ll*hh;
-
+                /*Deseleziono la regione individuata.*/
                 for(ii=i; ii<r[n].altezza+r[n].r; ii++)
                    for(jj=j; jj<r[n].base+r[n].c; jj++)
                     mappa[ii][jj] = 0;
-
-
-                //Trovo max_X index
-
-                if(ll>l){
-                    l = ll;
-                    *L = n;
-                }
-                if(hh>h){
-                    h = hh;
-                    *H = n;
-                }
-
-                if(aa>a){
-                    a = aa;
-                    *A = n;
-                }
-
                 printf("Regione %d @ (%d,%d)-->(%d,%d)\n",n,r[n].r,r[n].c,r[n].altezza+r[n].r-1,r[n].base+r[n].c-1);
-                stampaRes(r[n]);
                 n = n+1;
 
             }
@@ -139,3 +120,24 @@ int riconosciRegione (int M[][MAXR],int nr, int nc,int r,int c,int*b,int*h){
 
     return 0;
 }
+
+void trovaMax(Regione r[], int *A,int *H,int *L,int n){
+    int i,maxA,maxL,maxH;
+    maxA = maxH = maxL = 0;
+    for(i=0; i<n; i++){
+        if(r[i].altezza>maxH){
+            maxH = r[i].altezza;
+            *H = i;
+        }
+        if(r[i].base>maxL){
+            maxL = r[i].base;
+            *L = i;
+        }
+        if(r[i].altezza*r[i].base>maxA){
+            maxA = r[i].altezza*r[i].base;
+            *A = i;
+        }
+    }
+return;
+}
+

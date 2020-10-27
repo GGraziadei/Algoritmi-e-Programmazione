@@ -8,7 +8,7 @@
 #define S 30+1
 #define SS 300+1
 
-#define SCHERMO "stdout"
+#define SCHERMO "schermo"
 
 
 typedef struct{
@@ -27,21 +27,27 @@ typedef enum {
 r_stampa, r_ordina_time, r_ordina_tratta, r_ordina_partenza, r_ordina_arrivo,r_ricerca_partenza, r_fine,r_errore
 }e_comandi;
 
+typedef enum{
+id,delay_time,codTratta,start,end,start_time,end_time,date,errore
+}e_key;
+
 e_comandi stampa (Corsa c[], int n);
 e_comandi leggiComando(void);
 void toMinuscolo(char str[]);
 int creaCorse(Corsa corse[]);
-void selezionaDati(e_comandi c, Corsa corse[], int n);
+e_key selezionaDati(e_comandi c, Corsa corse[], int n, e_key ordinato);
+e_comandi ricercaPartenza (Corsa c[], int n, e_key *chiave);
 void toMaiuscolo(char str[]);
 int testDate(char d1[],char d2[],char d[]);
 int verificaFormato(char date[]);
-void stampaTratta(Corsa c);
+void stampaTratta(FILE *out,Corsa c);
 
 
 int main()
 {
     Corsa corse[N];
     e_comandi CODcomando;
+    e_key isOrderByKey = errore; /*Stato attuale di ordinamento*/
     int finito = 0;
     int n = creaCorse(corse);
 
@@ -49,7 +55,7 @@ int main()
     while(!finito){
         CODcomando = leggiComando();
         if(CODcomando != r_fine)
-         selezionaDati (CODcomando,corse,n);
+         isOrderByKey = selezionaDati (CODcomando,corse,n,isOrderByKey);
         else
          finito =1;
     }
@@ -67,7 +73,7 @@ e_comandi leggiComando(void){
      "stampa","ordina_time","ordina_tratta","ordina_partenza","ordina_arrivo","ricerca_partenza","fine"
     };
     char c_tabella_Comandi [r_errore][SS]={
-     "1. Stampa log: stampa <nome_file/stdout>",
+     "1. Stampa log: stampa <nome_file/schermo> ATTENZIONE SE STAMPI SU FILE INSERISCI ESTENSIONE",
      "2. ordinamento del vettore per data, e a parità di date per ora: ordina_time",
      "3. ordinamento del vettore per codice di tratta: ordina_tratta",
      "4. ordinamento del vettore per stazione di partenza: ordina_partenza",
@@ -98,7 +104,6 @@ e_comandi leggiComando(void){
     return c;
 
 };
-
 
 void toMinuscolo(char str[]){
     int i,l = strlen(str);
@@ -133,15 +138,16 @@ int creaCorse(Corsa corse[]){
     return n;
 }
 
-void selezionaDati(e_comandi c, Corsa corse[], int n){
+e_key selezionaDati(e_comandi c, Corsa corse[], int n, e_key ordinato){
 
     e_comandi cod=r_errore;
+
         switch (c) {
             case r_stampa: cod = stampa(corse,n);
              break;
-            /*case r_partenza: cod = Partenza(corse,n);
+            case r_ricerca_partenza: cod = ricercaPartenza(corse,n,&ordinato);
              break;
-            case r_capolinea: cod = Capolinea(corse,n);
+            /*case r_capolinea: cod = Capolinea(corse,n);
              break;
             case r_ritardo: cod = Ritardo(corse,n);
              break;
@@ -155,12 +161,12 @@ void selezionaDati(e_comandi c, Corsa corse[], int n){
 
     if(cod==r_errore)printf("Errore\n");
 
-return;
+return ordinato;
 }
 
 e_comandi stampa (Corsa c[], int n){
     e_comandi cod= r_errore;
-    int i;
+
     char fileout[S],cmd[S];
     gets(cmd); /* Salto al comando successivo eventuali errori di formattazione input derivanti da questo */
     if(sscanf(cmd,"%s",fileout)==1 ){
@@ -174,14 +180,22 @@ e_comandi stampa (Corsa c[], int n){
     return cod;
 }
 
-
-
+e_comandi ricercaPartenza (Corsa c[], int n, e_key *chiave){
+    e_comandi cod= r_errore;
+    char search[S],cmd[S];
+    gets(cmd); /* Salto al comando successivo eventuali errori di formattazione input derivanti da questo */
+    if(sscanf(cmd,"%s",search)==1 ){
+        //toMinuscolo(search);
+        cod = r_ricerca_partenza;
+        wrapper_binarySearch(c,n,start,*chiave,search);
+    }
+    return cod;
+}
 
 void stampaSchermo (Corsa c[],int n){
     int i=0;
     for(i=0; i<n; i++)
-    FILE *out =
-        stampaTratta(NULL,c[i]);
+        stampaTratta(stdout,c[i]);
 return;
 }
 
@@ -201,3 +215,94 @@ void stampaTratta(FILE *out,Corsa c){
  return;
 }
 
+void wrapper_binarySearch(Corsa c[],int n,e_key chiave, e_key chiaveAttuale, char search[]){
+    int i,id = -1,stampa=1;
+    if(chiaveAttuale==chiave || isOrderBy(chiave,c,n)){
+     id = binarySearchS(c,0,n-1,search);
+     /*Binary search ritorna l'id al primo elemento corrispondente ai criteri di ricerca
+     Se non trovato ritorna -1;*/
+     for(i=id;i<n && i>=0 && stampa; i++){
+        if(!strncmp(c[i].start,search,strlen(search)))
+            stampaTratta(stdout,c[i]);
+        else stampa = 0;
+     }
+    }
+    else
+        linearSearchS (c,n,search);
+
+
+return;
+}
+
+int binarySearchS (Corsa c[],int inf,int sup,char s[]){
+    /*Ricerca binaria su stringhe*/
+    if(!(sup-inf)){
+        if(!strncmp(c[inf].start,s,strlen(s)))
+            return inf;
+        else
+            return -1;
+    }
+
+    int m = (sup+inf)/2;
+
+    if(strncmp(c[inf].start,s,strlen(s)) >= 0)
+        binarySearchS(c,inf,m,s);
+    else
+        binarySearchS(c,m+1,sup,s);
+
+}
+
+void linearSearchS (Corsa c[],int n,char s[]){
+    int i;
+    char test[S];
+
+    for(i=0;i<n; i++){
+        if(confrontaNS(c[i].))
+            stampaTratta(stdout,c[i]);
+    }
+
+return;
+}
+int isOrderBy(e_key chiave,Corsa c[],int n){
+    /* Verifca ordinamento rispetto generica chiave.
+    Valida solo per chiavi di tipo vettore carattere
+    chiavi disponibili: codTratta,start,end,start_time,end_time,date*/
+     int i=0,ordinato=1,res;
+
+    for(i=0; i<n-1 && ordinato; i++){
+      switch (chiave){
+        case codTratta:res = confrontaS(c[i].codTratta,c[i+1].codTratta);
+         break;
+        case start:res = confrontaS(c[i].start,c[i+1].start);
+         break;
+        case end:res = confrontaS(c[i].end,c[i+1].end);
+         break;
+        case start_time:res = confrontaS(c[i].start_time,c[i+1].start_time);
+         break;
+        case end_time:res = confrontaS(c[i].end_time,c[i+1].end_time);
+         break;
+        case date:res = confrontaS(c[i].date,c[i+1].date);
+         break;
+        default : res=-1;
+      }
+      if(res>0) ordinato=0;
+    }
+    return ordinato?chiave:-1;
+}
+
+int confrontaNS (char *s1,char *s2, int n){
+    char item1[S],item2[S];
+    strcpy(item1,s1);
+    strcpy(item2,s2);
+    if((strlen(s1)-strlen(s2))>=0)
+        return strncmp(s1,s2,n);
+    else
+        return -1;
+}
+
+int confrontaS (char *s1,char *s2){
+    char item1[S],item2[S];
+    strcpy(item1,s1);
+    strcpy(item2,s2);
+    return strncmp(s1,s2);
+}

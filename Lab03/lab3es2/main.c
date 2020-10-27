@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define VISUALIZZA_MEM 0 /* Stampa lettura del byte in base 10*/
+#define VISUALIZZA_MEM 1 /* Stampa lettura del byte in base 10*/
 #define NUM_TEST -2130706177
 
 

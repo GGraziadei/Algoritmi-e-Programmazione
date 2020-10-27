@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define N 8
+#define N 7
 
 int majority(int *a,int n);
 int contaOcc (int *a,int n,int Item);
@@ -17,7 +17,7 @@ int main()
 }
 
 
-int majority(int *a,int n){
+int majority(int *a, int n){
     int maxOccDx = 0, maxOccSx=0, CmaxOccDx = 0,
         CmaxOccSx=0, inf = 0, sup = n-1, m;
 
@@ -41,11 +41,12 @@ int majority(int *a,int n){
     CmaxOccDx = contaOcc((a+m+1),m+1,maxOccDx);
 
     /*Verifica alla radice, ho trovato un maggioratario?*/
-    if(n==N && ())
+    if(n==N && CmaxOccDx<n/2 && CmaxOccSx<n/2)
+        return -1;
 
-    if(CmaxOccDx>CmaxOccSx && CmaxOccDx>n/2)
+    if(CmaxOccDx>CmaxOccSx )
         return maxOccDx;
-    else if(CmaxOccDx<CmaxOccSx && CmaxOccSx>n/2)
+    else if(maxOccSx>n/2)
         return maxOccSx;
 
 }
