@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1603989248 source:c:\users\gianluca graziadei\dropbox (politecnico di torino studenti)\2020-2021\algoritmi e programmazione\lab\lab04\lab4es3\main.c
+	<stdio.h>
+	<stdlib.h>
+	<ctype.h>
+	<string.h>
+
