@@ -12,7 +12,7 @@ int isMatch (char *w, char* r, int n);
 
 int main(int argc, char *argv[])
 {
-    char *res,regexp[S],src[]="La felicità non è avere quello che si desidera ma desiderare quello che si ha OscarWilde";
+    char *res,regexp[S],src[]="La felicita non e avere quello che si desidera ma desiderare quello che si ha OscarWilde";
     printf("Stringa acquisita: %s\n",src);
     printf("Inserire espressione regolare: ");
     gets(regexp);
