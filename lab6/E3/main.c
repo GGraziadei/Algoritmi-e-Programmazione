@@ -494,8 +494,8 @@ int binarySearch (tabella_t *tab, char *s, int inf, int sup,e_key chiave, e_sear
         else return inf-1;
 
         /*La modifica apportata alla condizione di terminazione estende alla possibilità di corrispondenze
-         * non esatte, utile la selezione di intervalli. Per selezionare gli estremi superiori degli intervallo
-         * faccio girare la funzione al contrario*/
+         * non esatte, utile la selezione di intervalli. Per selezionare gli estremi superiori degli intervalli
+         * faccio girare la funzione al senso contrario*/
 
     }
     int m = (sup+inf)/2;
@@ -646,15 +646,19 @@ void toMaiuscolo(char str[]){
 }
 
 int confrontaStr (char *s1,char *s2, int l){
-    char item1[S],item2[S];
-    strcpy(item1,s1);
-    strcpy(item2,s2);
+    char *item1,*item2;
+    int res ;
+    item1 = strdup(s1);
+    item2 = strdup(s2);
     toMaiuscolo(item1);
     toMaiuscolo(item2);
     if(l !=0 )
-        return strncmp(item1,item2,l);
+        res = strncmp(item1,item2,l);
     else
-        return strcmp(item1,item2);
+        res = strcmp(item1,item2);
+    free(item2);
+    free(item1);
+    return res;
 }
 
 void stampaSchermo (tabella_t *tab, e_key chiave){
@@ -683,7 +687,8 @@ void stampaTratta(FILE *out,Corsa *c){
 
 int isDate (char *date){
     /*formato data: YYYY/MM/DD
-    Ricodifico date se espresse nel formato DD/MM/YYYY */
+    Ricodifico date se espresse nel formato DD/MM/YYYY
+     Date non vettori dinamici, rimangono arginati in questo stack*/
     char y[S],m[S],d[S];
     int i;
     for(i=0; i<strlen(date); i++)
