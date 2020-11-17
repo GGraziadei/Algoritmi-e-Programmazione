@@ -163,6 +163,7 @@ e_comandi leggiComando(char c_tabella[][S]){
     };
 
     do{
+        fflush(stdin);
         printf("---------- MENU DI SELEZIONE ----------\n");
         for(i=0; i<r_errore; i++)printf("%s \n",c_tabella_Comandi[i] );
         printf("Inserire comando come da specifiche sopra indicate: ");
@@ -174,8 +175,6 @@ e_comandi leggiComando(char c_tabella[][S]){
         }
         if(c==r_errore){
             printf("Comando non valido\n\n");
-            gets(cmd); /*fine lettura comando attuale,
-                predispongo cmd per ricevere un nuovo comando.*/
         }
     }while(c == r_errore);
 
@@ -229,7 +228,7 @@ e_comandi wrapper_intervallo_date (tabella_t *tab,int ritardo){
     int i;
     IntervalloId intervallo;
     char data1[S],data2[S],cmd[S];
-    gets(cmd); /* Salto al comando successivo eventuali errori di formattazione input derivanti da questo */
+    gets(cmd);
     if(sscanf(cmd,"%s %s",data1,data2)==2 && isDate(data1) && isDate(data2)){
         if(confrontaStr(data1,data2,0)>0)
             scambiaStr(data1,data2);
@@ -271,7 +270,7 @@ e_comandi wrapper_ritardo_tot (tabella_t *tab){
     int i,conta=0;
     char codTrattaS[S],cmd[S];
     IntervalloId intervallo;
-    gets(cmd); /* Salto al comando successivo eventuali errori di formattazione input derivanti da questo */
+    gets(cmd);
     if(sscanf(cmd,"%s",codTrattaS)==1 && strlen(codTrattaS) == SCODTRATTA ){
         cod = r_ritardo_tot;
         /*Se esiste un ordinamento per type codTratta restringo la ricerca*/
@@ -299,8 +298,8 @@ e_comandi wrapper_stampa (tabella_t *tab){
     e_comandi cod= r_errore;
     e_key chiave;
     char fileout[S],chiaveS[S],cmd[S];
-    gets(cmd); /* Salto al comando successivo eventuali errori di formattazione input derivanti da questo */
-    if(sscanf(cmd,"%s %s",fileout,chiaveS)==2 ){
+    gets(cmd);
+    if(sscanf(cmd,"%s %s",fileout,chiaveS)>=1){
         toMinuscolo(fileout);
         toMinuscolo(chiaveS);
         chiave = str2key(chiaveS);
@@ -319,7 +318,7 @@ e_comandi wrapper_ricerca (tabella_t *tab, e_key chiave){
     e_comandi cod;
     int idCorsa,i,stampa=1;
     char search[S],cmd[S],*str;
-    gets(cmd); /* Salto al comando successivo eventuali errori di formattazione input derivanti da questo */
+    gets(cmd);
     if(sscanf(cmd,"%s",search)==1 ){
         cod = chiave2cod(chiave);
        if(tab->ordinamenti[chiave].chiaveOrdinamento == chiave){

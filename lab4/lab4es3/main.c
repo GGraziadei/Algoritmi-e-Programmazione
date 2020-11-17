@@ -12,7 +12,7 @@ int isMatch (char *w, char* r, int n);
 
 int main(int argc, char *argv[])
 {
-    char *res,regexp[S],src[]="La felicita non e avere quello che si desidera ma desiderare quello che si ha OscarWilde voto";
+    char *res,regexp[S],src[]="Ciao Mondo Hello World";
     printf("Stringa acquisita: %s\n",src);
     printf("Inserire espressione regolare: ");
     gets(regexp);
@@ -24,16 +24,18 @@ int main(int argc, char *argv[])
 
 char *cercaRegexp (char *src, char *regexp){
     char wordTest[S];
-    int match = 0,i,n;
+    int match = 0,i,j,n;
     n = trovaLRegexp(regexp);
 
-        while (sscanf(src,"%s%n", wordTest,&i)>0 ){
-                if(n==strlen(wordTest)){
-                    //printf("Provo con: %s \n\n",wordTest);
-                    match = isMatch(wordTest,regexp,n);
+        while (sscanf(src,"%s %n", wordTest,&i)>0 ){
+                for(j=0; j<strlen(wordTest) && n-strlen(&wordTest[j])>=0; j++){
+                    //printf("Provo con: %s \n\n",&(wordTest[j]));
+                    match = isMatch(&(wordTest[j]),regexp,n);
                     if(match){
-                         *(src+n+1)='\0';
-                         return (*src==' ')?src+1:src;
+                        char *res = &(src[j]);
+                        printf("Occorrenza trovata nella parola: %s\nPunto di MATCH: ",wordTest);
+                         *(res+n)='\0';
+                         return res;
                     }
                     /* Uscita non strutturata se trovo un match.
                     Il programma richiede solamente la prima occorrenza trovata */

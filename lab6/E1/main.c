@@ -6,8 +6,8 @@
 #define PLAYLISTS "playlists.txt"
 
 #define SHOW_ALBERO 0 /*Se abilitato mostra informazioni su come è formato l'insieme delle soluzioni
- * indicando gli indici delle canzoni del relativo livello selezionate.
- * In particolare mi apsetto che l'ultima playlist sia formata da: 4 2 3 4 2 */
+ * indicando gli indici delle canzoni del relativo livello selezionate. i = 0 livello 0 ...
+ * mi apsetto che l'ultima playlist sia formata da: 4 2 3 4 2 */
 
 typedef struct {
     char **canzoni;

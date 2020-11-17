@@ -4,9 +4,9 @@ GTT001  da Braccini      a Porta_Nuova     del 2018/12/10 PARTENZA: 19:50:00   A
 
 GTT002  da Politecnico   a XVIII_Dicembre  del 2018/10/10 PARTENZA: 10:01:23   ARRIVO: 10:12:08   RITARDO: 4 minuti
 
-GTT002  da Politecnico   a Piazza_Statuto  del 2018/11/10 PARTENZA: 23:11:59   ARRIVO: 23:20:07   RITARDO: 0 minuti
-
 GTT003  da Einaudi       a Cso_Trapani     del 2018/09/10 PARTENZA: 14:11:23   ARRIVO: 14:38:23   RITARDO: 2 minuti
 
 GTT004  da Marmolada     a Sebastopoli     del 2018/11/10 PARTENZA: 00:01:02   ARRIVO: 00:12:00   RITARDO: 3 minuti
+
+GTT002  da Politecnico   a Piazza_Statuto  del 2018/11/10 PARTENZA: 23:11:59   ARRIVO: 23:20:07   RITARDO: 0 minuti
 

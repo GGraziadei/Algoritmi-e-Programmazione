@@ -64,7 +64,7 @@ typedef struct {
 tabella_t leggiLog();
 IntervalloId selezionaIntervalloDate (char *d1,char*d2,tabella_t *tab, e_key chiave);
 IntervalloId selezionaIntervalloTratta (char *s1,tabella_t *tab, e_key chiave);
-e_comandi leggiComando(char c_tabella[][S]);
+e_comandi leggiComando(char **c_tabella);
 e_comandi wrapper_ricerca (tabella_t *tab, e_key chiave);
 e_comandi wrapper_stampa (tabella_t *tab);
 e_comandi  wrapper_ordina (tabella_t *tab,e_key chiave);
@@ -108,7 +108,7 @@ int main() {
     tabella_t tab;
     e_comandi CODcomando;
     int finito = 0;
-    char c_tabella[r_errore][S]={ "stampa","ordina_time","ordina_tratta","ordina_partenza","ordina_arrivo","partenza","capolinea","ricerca_date","ricerca_tratta","ritardo","ritardo_tot","date","carica_log","fine" };
+    char *c_tabella[r_errore]={ "stampa","ordina_time","ordina_tratta","ordina_partenza","ordina_arrivo","partenza","capolinea","ricerca_date","ricerca_tratta","ritardo","ritardo_tot","date","carica_log","fine" };
     tab = leggiLog();
     tab.last_update = codTratta;
     while(!finito){
@@ -148,15 +148,13 @@ tabella_t leggiLog(){
     if(fscanf(fp,"%d",&tab.n)!=1)
         exit(-1);
 
-    /*Per esercizio alloco a mano tutti i vettori interni alla struttura
-     *Normalmente non ne vale la pena dovendo poi fare una strcpy e portare la complessità della funzione ad O(n^2)*/
-    tab.corse = (Corsa *) calloc(tab.n,sizeof(Corsa));
+    tab.corse = (Corsa *) malloc(tab.n*sizeof(Corsa));
     if (tab.corse  == NULL)
         exit(-1);
 
     for(i=0; i<errore; i++) {
         tab.ordinamenti[i].chiaveOrdinamento = errore;
-        tab.ordinamenti[i].toCorsa = (Corsa ** ) calloc(tab.n,sizeof(Corsa*));
+        tab.ordinamenti[i].toCorsa = (Corsa ** ) malloc(tab.n*sizeof(Corsa*));
         if (tab.ordinamenti[i].toCorsa  == NULL)
             exit(-1);
     }
@@ -205,6 +203,7 @@ tabella_t leggiLog(){
         sscanf(tab.corse[i].start_time,"%d:%d:%d",&tab.corse[i].Hp.h,&tab.corse[i].Hp.m,&tab.corse[i].Hp.s);
         sscanf(tab.corse[i].end_time,"%d:%d:%d",&tab.corse[i].Ha.h,&tab.corse[i].Ha.m,&tab.corse[i].Ha.s);
         sscanf(tab.corse[i].date,"%d/%d/%d",&tab.corse[i].Gd.a,&tab.corse[i].Ha.m,&tab.corse[i].Ha.s);
+
         tab.ordinamenti[time].toCorsa[i] = tab.ordinamenti[codTratta].toCorsa[i]  = tab.ordinamenti[start].toCorsa[i] =tab.ordinamenti[end].toCorsa[i] = &(tab.corse[i]);
         //printf("%s \n",tab.ordinamenti[end].toCorsa[i]->start);
     }
@@ -213,12 +212,12 @@ tabella_t leggiLog(){
     return tab;
 }
 
-e_comandi leggiComando(char c_tabella[][S]){
+e_comandi leggiComando(char **c_tabella){
     int i;
     char cmd[S];
     e_comandi c;
 
-    char c_tabella_Comandi [r_errore][SS]={
+    char *c_tabella_Comandi[r_errore]={
             "1. Stampa log: stampa <nome_file/schermo> <chiave_ordinamento> \nATTENZIONE SE STAMPI SU FILE INSERISCI ESTENSIONE - Se non presente vettore ordinato stampa effettuata secondo last_update",
             "2. ordinamento del vettore per data, e a parita di date per ora: ordina_time",
             "3. ordinamento del vettore per codice di tratta: ordina_tratta",
@@ -236,6 +235,7 @@ e_comandi leggiComando(char c_tabella[][S]){
     };
 
     do{
+        fflush(stdin);
         printf("---------- MENU DI SELEZIONE ----------\n");
         for(i=0; i<r_errore; i++)printf("%s \n",c_tabella_Comandi[i] );
         printf("Inserire comando come da specifiche sopra indicate: ");
@@ -247,8 +247,6 @@ e_comandi leggiComando(char c_tabella[][S]){
         }
         if(c==r_errore){
             printf("Comando non valido\n\n");
-            gets(cmd); /*fine lettura comando attuale,
-                predispongo cmd per ricevere un nuovo comando.*/
         }
     }while(c == r_errore);
 
@@ -457,7 +455,7 @@ e_comandi  wrapper_ordina (tabella_t *tab,e_key chiave){
         printf("Vettore di puntatori ORDINATO per chiave di ricerca prensente in memoria. SALTO\n");
         return cod;
     }
-    /* Ordina(tab,chiave); Modificato alla versione es3lab6*/
+    /* Ordina(tab,chiave); Modificato alla versione es3lab6 con MergeSort*/
     wrapper_MergeSort(tab,chiave);
     tab->ordinamenti[chiave].chiaveOrdinamento = chiave;
     printf("Ordinamento completato\n");
