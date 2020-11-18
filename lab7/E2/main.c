@@ -13,9 +13,9 @@ typedef enum {
     s_schermo,s_file
 }e_add_mode;
 typedef struct {
-     int a;
-     int m;
-     int g;
+    int a;
+    int m;
+    int g;
 } data_t;
 typedef struct {
     unsigned int cap;
@@ -48,7 +48,6 @@ Item item_gen_str (char *);
 Item item_gen_cmd ();
 Item listExtractKeyP (link *hp,char* value);
 Item ItemSetVOID ();
-data_t dataSetVOID();
 indirizzo_t indirizzoSetVOID();
 int confrontaDate (data_t d1, data_t d2);
 void stampaItem(FILE *out,Item i);
@@ -173,17 +172,17 @@ link wrapper_add_item (e_add_mode mode,link head){
 }
 
 void wrapper_stampa (link head){
-     char file[S];
-     int mod;
-     fscanf(stdin,"%s",file);
-     if (head == NULL){
-         printf("Lista VUOTA !\n\n");
-         return;
-     }
-     printf("Seleziona modalita di stampa NORMAL(0) - REVERSE(1): ");
-     scanf("%d",&mod);
-     wrapper_stampaFile(mod,file,head);
-     wrapper_stampaSchermo(mod,head); /*SOLO PER DEBUG*/
+    char file[S];
+    int mod;
+    fscanf(stdin,"%s",file);
+    if (head == NULL){
+        printf("Lista VUOTA !\n\n");
+        return;
+    }
+    printf("Seleziona modalita di stampa NORMAL(0) - REVERSE(1): ");
+    scanf("%d",&mod);
+    wrapper_stampaFile(mod,file,head);
+    wrapper_stampaSchermo(mod,head); /*SOLO PER DEBUG*/
 }
 
 void wrapper_search_code (link head){
@@ -212,21 +211,25 @@ link  wrapper_extract_code (link head){
 }
 
 link  wrapper_extract_date (link head){
-    Item i;
     char data1[S],data2[S];
-    data_t d1,d2,tmp;
+    data_t d1,d2;
+    link t=head,tmp_link;
+    int fine = 0;
     while (fscanf(stdin,"%s %s",data1,data2)!=2)
         printf("Inserire intervallo date: ");
+
     d2 = str2date(data2);
     d1 = str2date(data1);
-    if (confrontaDate(d1,d2)>0){
-        printf("Errore logica intervallo date, nuovo intervallo [%s ; %s]");
-        tmp = d1;
-        d1 = d2;
-        d2 = tmp;
+
+    while (head != NULL && t != NULL &&  fine == 0){
+        tmp_link = t->next;
+        if (confrontaDate(d2,t->val.b_day)>=0){
+            if(confrontaDate(d1,t->val.b_day)<=0){
+                head = wrapper_extract (head, t->val.id);
+            } else fine = 1;
+        }
+        t = tmp_link;
     }
-    while (head != NULL && confrontaDate(d2,head->val.b_day)>=0 && confrontaDate(d1,head->val.b_day)<=0)
-        head = wrapper_extract (head, head->val.id);
     return head ;
 }
 
@@ -447,7 +450,6 @@ Item item_gen_cmd(){
 Item ItemSetVOID (){
     Item i;
     i.id = i.nome = i.cognome = NULL;
-    i.b_day = dataSetVOID();
     i.address = indirizzoSetVOID();
     return i;
 }
@@ -456,18 +458,12 @@ void free_node (link x){
     free(x);
 }
 
-data_t dataSetVOID(){
-    data_t i;
-    i.a = i.g = i.m = -1;
-    return i;
-}
 indirizzo_t indirizzoSetVOID(){
     indirizzo_t i;
     i.city=i.via = NULL;
     i.cap = -1;
     return i;
 }
-
 void free_item (Item x){
     free(x.id);
     free(x.nome);
