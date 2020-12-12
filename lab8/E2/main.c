@@ -103,7 +103,7 @@ void dispRip (tab *t, int pos){
             dispRip(t, pos + 1);
             t->p_sol.value -= t->pietre[i].val;
             if(t->pietre[i].rip_now > 0)
-                t->pietre[i].rip_now--; /*Cambio pietra*/
+                t->pietre[i].rip_now = 0; /*Cambio pietra*/
             t->pietre[i].occ_now--;
         }else{
             if(t->p_sol.value > t->best_sol.value)
@@ -113,13 +113,14 @@ void dispRip (tab *t, int pos){
     }
 }
 void update_best(tab *t,int n ){
+    int i;
     if(checkSol(t,n)==0) {
         t->best_sol.value = t->p_sol.value;
         t->best_sol.n = n;
         if (t->best_sol.sol != NULL)
             free(t->best_sol.sol);
         t->best_sol.sol = malloc(t->best_sol.n * sizeof(e_tipo));
-        for (int i = 0; i < t->best_sol.n; i++)
+        for ( i = 0; i < t->best_sol.n; i++)
             t->best_sol.sol[i] = t->p_sol.sol[i];
     }
 }
@@ -127,8 +128,8 @@ int pruning (tab *t, int pos, int i){
 /*i indice esaminato*/
     e_tipo prev = t->p_sol.sol[pos-1];
 
-    if(t->pietre[i].type == e_zaffiro && (t->pietre[e_zaffiro].occ_now+1  > t->pietre[e_smeraldo].occ_now))
-        return 1;
+    /*if(t->pietre[i].type == e_zaffiro && (t->pietre[e_zaffiro].occ_now+1  > t->pietre[e_smeraldo].occ_now))
+        return 1;*/
 
     if(t->pietre[i].type == prev && t->pietre[i].rip_now+1>t->max_rip)
         return 1;
@@ -146,6 +147,8 @@ int pruning (tab *t, int pos, int i){
 
 int checkSol (tab *t,int n){
     int i = 1,check=1;
+    if(t->pietre[e_zaffiro].occ_now>t->pietre[e_smeraldo].occ_now)
+        return 1;
     e_tipo test = t->p_sol.sol[0];
     while (i<n){
         if(t->p_sol.sol[i]==test)
