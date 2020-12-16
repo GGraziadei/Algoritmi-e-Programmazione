@@ -22,7 +22,7 @@ void invArray_printByIndex(FILE *fp, invArray_t invArray, int index);
 /* ritorna puntatore a oggetto selezionato da indice (nel vettore) */
 inv_t *invArray_getByIndex(invArray_t invArray, int index);
 /* ritorna indice (nel vettore) a oggetto selezionato da nome */
-int invArray_searchByName(invArray_t invArray, char *name);
+int invArray_searchByName(invArray_t invArray, INV_KEY name);
 
 /* Si possono aggiungere altre funzioni se ritenute necessarie */
 

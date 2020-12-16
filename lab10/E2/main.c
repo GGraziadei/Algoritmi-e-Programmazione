@@ -1,28 +1,34 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 
 #define S 50+1
-#define SHOW_INFO 0
-
+#define GDB 0
+#define NO_MEMOIZED -100
 typedef enum tipo{
     e_zaffiro,e_rubino,e_topazio,e_smeraldo,e_void
 } e_tipo;
 typedef struct{
     e_tipo type;
-    int num,val;
+    int num;
 }Item;
-
 typedef struct{
     Item *pietre;
-    int n_max,max_value,*maxKnown;
-}tab;
+    int sol;
+    int n;
+}tab_t;
 
-tab init_set (FILE *);
-void free_tab(tab *DB);
+tab_t init_set (FILE *);
+void free_tab(tab_t *DB);
 int openFile (FILE **fp);
-int MaxValueDP(e_tipo pietra_prev,tab *t, int pos);
-int check (e_tipo p1, e_tipo prev);
-int fZ (tab *t);
+void maxL(tab_t *tab);
+int *****init_memoMatrix(tab_t *tab);
+void free_memoMatrix(tab_t *tab,int *****m);
+int max(int a,int b);
+int fT(int *****memoMatrix,int z,int r,int t,int s);
+int fS(int *****memoMatrix,int z,int r,int t,int s);
+int fZ(int *****memoMatrix,int z,int r,int t,int s);
+int fR(int *****memoMatrix,int z,int r,int t,int s);
 
 int main() {
     setbuf(stdout, 0);
@@ -31,71 +37,133 @@ int main() {
     test_num = openFile(&fp);
     for (int i = 0; i < test_num; i++) {
         printf("\n\nTEST #%d\n",i+1);
-        tab DB = init_set(fp);
-        printf("%d   \n",fZ(&DB));
+        tab_t DB = init_set(fp);
+        maxL(&DB);
+        printf("\nzaffiro = %d, rubino = %d, topazio = %d, smeraldo = %d\nMAX_L %d\n",
+               DB.pietre[e_zaffiro].num,DB.pietre[e_rubino].num,DB.pietre[e_topazio].num,DB.pietre[e_smeraldo].num,DB.sol);
         free_tab(&DB);
     }
-
     fclose(fp);
     return 0;
 }
 
-int fZ (tab *t){
-    int max = 0;
-    t->maxKnown = (int *) calloc(t->n_max,sizeof (int)); /*Ogni pietra ha valore >0 questo implioca che è possibile
-    * inizializzare a 0 maxKnown*/
-    t->maxKnown[0] = t->pietre[e_zaffiro].val;
-    max = MaxValueDP(e_zaffiro,t,1);
-    free(t->maxKnown);
-    return max;
+void  maxL(tab_t *tab){
+    int z,r,t,s,*****memoMatrix,tmp;
+    z = tab->pietre[e_zaffiro].num;
+    r = tab->pietre[e_rubino].num;
+    t = tab->pietre[e_topazio].num;
+    s = tab->pietre[e_smeraldo].num;
+    memoMatrix = init_memoMatrix (tab);
+    /*Si mostra che possono esistere più soluzioni di pari lunghezza (differente pietra starter),
+     * utile a spiegare i risultati ottenuti nel precedente lab*/
+    tmp = fZ(memoMatrix,z,r,t,s);
+    printf("CON ZAFFIRO starter: %d\n",tmp);
+    tab->sol = max(tab->sol,tmp);
+    tmp = fR(memoMatrix,z,r,t,s);
+    printf("CON RUBINO starter: %d\n",tmp);
+    tab->sol = max(tab->sol ,tmp );
+     tmp = fT(memoMatrix,z,r,t,s);
+    printf("CON TOPAZIO starter: %d\n",tmp);
+    tab->sol = max(tab->sol , tmp);
+    tmp = fS(memoMatrix,z,r,t,s);
+    printf("CON SMERALDO starter: %d\n",tmp);
+    tab->sol = max(tab->sol , tmp);
+    free_memoMatrix(tab,memoMatrix);
 }
-int MaxValueDP(e_tipo pietra_prev,tab *t, int pos){
-    int i,tmp,max=0;
-    if(t->maxKnown[pos]>0)
-        return t->maxKnown[pos];
-    else
-        for(i=0; i<e_void; i++)
-            if(check(t->pietre[i].type,pietra_prev) == 0)
-                if((tmp = MaxValueDP(t->pietre[i].type,t,pos+1)) > max)
-                    max = tmp;
-    t->maxKnown[pos] = max;
-    return max;
+int fZ(int *****memoMatrix,int z,int r,int t,int s){
+    if(memoMatrix[e_zaffiro][z][r][t][s] != NO_MEMOIZED)
+        return memoMatrix[e_zaffiro][z][r][t][s];
+    if(z <= 0) return 0;
+    memoMatrix[e_zaffiro][z][r][t][s] = 1+max(fR(memoMatrix,z-1,r,t,s),fZ(memoMatrix,z-1,r,t,s));
+    return memoMatrix[e_zaffiro][z][r][t][s];
 }
-tab init_set (FILE *fp){
-    tab tab_t;
+int fR(int *****memoMatrix,int z,int r,int t,int s){
+    if(memoMatrix[e_rubino][z][r][t][s] != NO_MEMOIZED)
+        return memoMatrix[e_rubino][z][r][t][s];
+    if(r <= 0) return 0;
+    memoMatrix[e_rubino][z][r][t][s] = 1+max(fT(memoMatrix,z,r-1,t,s),fS(memoMatrix,z,r-1,t,s));
+    return memoMatrix[e_rubino][z][r][t][s];
+}
+int fS(int *****memoMatrix,int z,int r,int t,int s){
+    if(memoMatrix[e_smeraldo][z][r][t][s] != NO_MEMOIZED)
+        return memoMatrix[e_smeraldo][z][r][t][s];
+    if(s <= 0) return 0;
+    memoMatrix[e_smeraldo][z][r][t][s] = 1+max(fT(memoMatrix,z,r,t,s-1),fS(memoMatrix,z,r,t,s-1));
+    return memoMatrix[e_smeraldo][z][r][t][s];
+}
+int fT(int *****memoMatrix,int z,int r,int t,int s){
+    if(memoMatrix[e_topazio][z][r][t][s] != NO_MEMOIZED)
+        return memoMatrix[e_topazio][z][r][t][s];
+    if(t <= 0) return 0;
+    memoMatrix[e_topazio][z][r][t][s] = 1+max(fR(memoMatrix,z,r,t-1,s),fZ(memoMatrix,z,r,t-1,s));
+    return memoMatrix[e_topazio][z][r][t][s];
+}
+
+int *****init_memoMatrix(tab_t *tab){
+    int z,r,t,s,*****m;
+    e_tipo pietra_starter;
+    m = (int *****) malloc( tab->n*sizeof (int ****));
+    assert(m != NULL);
+    for(pietra_starter = e_zaffiro; pietra_starter<tab->n; pietra_starter++) {
+        m[pietra_starter] = (int ****) malloc((tab->pietre[e_zaffiro].num + 1)*sizeof (int ***));
+        assert(m[pietra_starter] != NULL);
+        for (z = 0; z <= tab->pietre[e_zaffiro].num; z++) {
+            m[pietra_starter][z] = (int ***) malloc((tab->pietre[e_rubino].num + 1) * sizeof(int **));
+            assert(m[pietra_starter][z] != NULL);
+            for (r = 0; r <= tab->pietre[e_rubino].num; r++) {
+                m[pietra_starter][z][r] = (int **) malloc((tab->pietre[e_topazio].num + 1) * sizeof(int *));
+                assert(m[pietra_starter][z][r] != NULL);
+                for (t = 0; t <= tab->pietre[e_topazio].num; t++) {
+                    m[pietra_starter][z][r][t] = (int *) malloc((tab->pietre[e_smeraldo].num + 1) * sizeof(int));
+                    assert(m[pietra_starter][z][r][t] != NULL);
+                    for (s = 0; s <= tab->pietre[e_smeraldo].num; s++) {
+                        m[pietra_starter][z][r][t][s] = NO_MEMOIZED;
+                    }
+                }
+            }
+        }
+    }
+    return m;
+}
+
+void free_memoMatrix(tab_t *tab,int *****m){
+    int z,r,t;
+    e_tipo pietra_starter;
+    for(pietra_starter = e_zaffiro; pietra_starter<tab->n; pietra_starter++) {
+        for (z = 0; z <= tab->pietre[e_zaffiro].num; z++) {
+            for (r = 0; r <= tab->pietre[e_rubino].num; r++) {
+                for (t = 0; t <= tab->pietre[e_topazio].num; t++) {
+                    free(m[pietra_starter][z][r][t]);
+                }
+                free(m[pietra_starter][z][r]);
+            }
+            free(m[pietra_starter][z]);
+        }
+        free(m[pietra_starter]);
+    }
+    free(m);
+}
+
+tab_t init_set (FILE *fp){
+    tab_t tab_t;
     int j;
     tab_t.pietre = malloc(e_void*sizeof(Item));
-    tab_t.n_max = 0;
+    tab_t.n = e_void;
+    tab_t.sol = NO_MEMOIZED;
     for (int j = 0; j < e_void; j++) {
         fscanf(fp,"%d",&tab_t.pietre[j].num);
-        tab_t.n_max += tab_t.pietre[j].num;
         tab_t.pietre[j].type = j;
-    }
-    for (int j = 0; j < e_void; j++){
-        fscanf(fp,"%d",&tab_t.pietre[j].val);
-        tab_t.max_value += tab_t.pietre[j].val*tab_t.pietre[j].num;
     }
     return tab_t;
 }
 
-int check (e_tipo p1, e_tipo prev){
-    if((prev == e_zaffiro) && (p1 != e_zaffiro) && (p1 != e_rubino))
-        return 1;
-    if(prev == e_smeraldo && (p1 != e_smeraldo) && (p1 != e_topazio))
-        return 1;
-    if(prev == e_rubino &&(p1 != e_smeraldo) && (p1 != e_topazio))
-        return 1;
-    if(prev == e_topazio && (p1 != e_zaffiro) && (p1 != e_rubino))
-        return 1;
-    return 0;
-}
-
-
-
-void free_tab(tab *DB){
+void free_tab(tab_t *DB){
     free(DB->pietre);
 }
-
+int max(int a, int b){
+    if(a>=b)return a;
+    else return b;
+}
 int openFile (FILE **fp){
     int i;
     char str[S];
