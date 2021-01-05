@@ -67,10 +67,10 @@ RM = "C:\Program Files\JetBrains\CLion 2020.2.3\bin\cmake\win\bin\cmake.exe" -E 
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "C:\Users\Gianluca Graziadei\Desktop\LAB\lab11\E1"
+CMAKE_SOURCE_DIR = "C:\Users\Gianluca Graziadei\Desktop\LAB\lab12\E1"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "C:\Users\Gianluca Graziadei\Desktop\LAB\lab11\E1\cmake-build-debug"
+CMAKE_BINARY_DIR = "C:\Users\Gianluca Graziadei\Desktop\LAB\lab12\E1\cmake-build-debug"
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -99,9 +99,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start "C:\Users\Gianluca Graziadei\Desktop\LAB\lab11\E1\cmake-build-debug\CMakeFiles" "C:\Users\Gianluca Graziadei\Desktop\LAB\lab11\E1\cmake-build-debug\CMakeFiles\progress.marks"
+	$(CMAKE_COMMAND) -E cmake_progress_start "C:\Users\Gianluca Graziadei\Desktop\LAB\lab12\E1\cmake-build-debug\CMakeFiles" "C:\Users\Gianluca Graziadei\Desktop\LAB\lab12\E1\cmake-build-debug\CMakeFiles\progress.marks"
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start "C:\Users\Gianluca Graziadei\Desktop\LAB\lab11\E1\cmake-build-debug\CMakeFiles" 0
+	$(CMAKE_COMMAND) -E cmake_progress_start "C:\Users\Gianluca Graziadei\Desktop\LAB\lab12\E1\cmake-build-debug\CMakeFiles" 0
 .PHONY : all
 
 # The main clean target
@@ -142,140 +142,113 @@ E1/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/build
 .PHONY : E1/fast
 
-CorpoLibero.obj: CorpoLibero.c.obj
+QUOTAZIONE.obj: QUOTAZIONE.c.obj
 
-.PHONY : CorpoLibero.obj
-
-# target to build an object file
-CorpoLibero.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/CorpoLibero.c.obj
-.PHONY : CorpoLibero.c.obj
-
-CorpoLibero.i: CorpoLibero.c.i
-
-.PHONY : CorpoLibero.i
-
-# target to preprocess a source file
-CorpoLibero.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/CorpoLibero.c.i
-.PHONY : CorpoLibero.c.i
-
-CorpoLibero.s: CorpoLibero.c.s
-
-.PHONY : CorpoLibero.s
-
-# target to generate assembly for a file
-CorpoLibero.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/CorpoLibero.c.s
-.PHONY : CorpoLibero.c.s
-
-DIAG.obj: DIAG.c.obj
-
-.PHONY : DIAG.obj
+.PHONY : QUOTAZIONE.obj
 
 # target to build an object file
-DIAG.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/DIAG.c.obj
-.PHONY : DIAG.c.obj
+QUOTAZIONE.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/QUOTAZIONE.c.obj
+.PHONY : QUOTAZIONE.c.obj
 
-DIAG.i: DIAG.c.i
+QUOTAZIONE.i: QUOTAZIONE.c.i
 
-.PHONY : DIAG.i
+.PHONY : QUOTAZIONE.i
 
 # target to preprocess a source file
-DIAG.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/DIAG.c.i
-.PHONY : DIAG.c.i
+QUOTAZIONE.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/QUOTAZIONE.c.i
+.PHONY : QUOTAZIONE.c.i
 
-DIAG.s: DIAG.c.s
+QUOTAZIONE.s: QUOTAZIONE.c.s
 
-.PHONY : DIAG.s
+.PHONY : QUOTAZIONE.s
 
 # target to generate assembly for a file
-DIAG.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/DIAG.c.s
-.PHONY : DIAG.c.s
+QUOTAZIONE.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/QUOTAZIONE.c.s
+.PHONY : QUOTAZIONE.c.s
 
-ELMENT.obj: ELMENT.c.obj
+TIME.obj: TIME.c.obj
 
-.PHONY : ELMENT.obj
+.PHONY : TIME.obj
 
 # target to build an object file
-ELMENT.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/ELMENT.c.obj
-.PHONY : ELMENT.c.obj
+TIME.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/TIME.c.obj
+.PHONY : TIME.c.obj
 
-ELMENT.i: ELMENT.c.i
+TIME.i: TIME.c.i
 
-.PHONY : ELMENT.i
+.PHONY : TIME.i
 
 # target to preprocess a source file
-ELMENT.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/ELMENT.c.i
-.PHONY : ELMENT.c.i
+TIME.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/TIME.c.i
+.PHONY : TIME.c.i
 
-ELMENT.s: ELMENT.c.s
+TIME.s: TIME.c.s
 
-.PHONY : ELMENT.s
+.PHONY : TIME.s
 
 # target to generate assembly for a file
-ELMENT.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/ELMENT.c.s
-.PHONY : ELMENT.c.s
+TIME.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/TIME.c.s
+.PHONY : TIME.c.s
 
-PROGRAM.obj: PROGRAM.c.obj
+TITOLO.obj: TITOLO.c.obj
 
-.PHONY : PROGRAM.obj
+.PHONY : TITOLO.obj
 
 # target to build an object file
-PROGRAM.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/PROGRAM.c.obj
-.PHONY : PROGRAM.c.obj
+TITOLO.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/TITOLO.c.obj
+.PHONY : TITOLO.c.obj
 
-PROGRAM.i: PROGRAM.c.i
+TITOLO.i: TITOLO.c.i
 
-.PHONY : PROGRAM.i
+.PHONY : TITOLO.i
 
 # target to preprocess a source file
-PROGRAM.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/PROGRAM.c.i
-.PHONY : PROGRAM.c.i
+TITOLO.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/TITOLO.c.i
+.PHONY : TITOLO.c.i
 
-PROGRAM.s: PROGRAM.c.s
+TITOLO.s: TITOLO.c.s
 
-.PHONY : PROGRAM.s
+.PHONY : TITOLO.s
 
 # target to generate assembly for a file
-PROGRAM.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/PROGRAM.c.s
-.PHONY : PROGRAM.c.s
+TITOLO.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/TITOLO.c.s
+.PHONY : TITOLO.c.s
 
-diagLIST.obj: diagLIST.c.obj
+TRANSAZIONE.obj: TRANSAZIONE.c.obj
 
-.PHONY : diagLIST.obj
+.PHONY : TRANSAZIONE.obj
 
 # target to build an object file
-diagLIST.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/diagLIST.c.obj
-.PHONY : diagLIST.c.obj
+TRANSAZIONE.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/TRANSAZIONE.c.obj
+.PHONY : TRANSAZIONE.c.obj
 
-diagLIST.i: diagLIST.c.i
+TRANSAZIONE.i: TRANSAZIONE.c.i
 
-.PHONY : diagLIST.i
+.PHONY : TRANSAZIONE.i
 
 # target to preprocess a source file
-diagLIST.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/diagLIST.c.i
-.PHONY : diagLIST.c.i
+TRANSAZIONE.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/TRANSAZIONE.c.i
+.PHONY : TRANSAZIONE.c.i
 
-diagLIST.s: diagLIST.c.s
+TRANSAZIONE.s: TRANSAZIONE.c.s
 
-.PHONY : diagLIST.s
+.PHONY : TRANSAZIONE.s
 
 # target to generate assembly for a file
-diagLIST.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/diagLIST.c.s
-.PHONY : diagLIST.c.s
+TRANSAZIONE.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/TRANSAZIONE.c.s
+.PHONY : TRANSAZIONE.c.s
 
 main.obj: main.c.obj
 
@@ -304,6 +277,60 @@ main.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/main.c.s
 .PHONY : main.c.s
 
+quotazioniBST.obj: quotazioniBST.c.obj
+
+.PHONY : quotazioniBST.obj
+
+# target to build an object file
+quotazioniBST.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/quotazioniBST.c.obj
+.PHONY : quotazioniBST.c.obj
+
+quotazioniBST.i: quotazioniBST.c.i
+
+.PHONY : quotazioniBST.i
+
+# target to preprocess a source file
+quotazioniBST.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/quotazioniBST.c.i
+.PHONY : quotazioniBST.c.i
+
+quotazioniBST.s: quotazioniBST.c.s
+
+.PHONY : quotazioniBST.s
+
+# target to generate assembly for a file
+quotazioniBST.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/quotazioniBST.c.s
+.PHONY : quotazioniBST.c.s
+
+titoliLIST.obj: titoliLIST.c.obj
+
+.PHONY : titoliLIST.obj
+
+# target to build an object file
+titoliLIST.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/titoliLIST.c.obj
+.PHONY : titoliLIST.c.obj
+
+titoliLIST.i: titoliLIST.c.i
+
+.PHONY : titoliLIST.i
+
+# target to preprocess a source file
+titoliLIST.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/titoliLIST.c.i
+.PHONY : titoliLIST.c.i
+
+titoliLIST.s: titoliLIST.c.s
+
+.PHONY : titoliLIST.s
+
+# target to generate assembly for a file
+titoliLIST.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/titoliLIST.c.s
+.PHONY : titoliLIST.c.s
+
 # Help Target
 help:
 	@echo The following are some of the valid targets for this Makefile:
@@ -313,24 +340,27 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... E1
-	@echo ... CorpoLibero.obj
-	@echo ... CorpoLibero.i
-	@echo ... CorpoLibero.s
-	@echo ... DIAG.obj
-	@echo ... DIAG.i
-	@echo ... DIAG.s
-	@echo ... ELMENT.obj
-	@echo ... ELMENT.i
-	@echo ... ELMENT.s
-	@echo ... PROGRAM.obj
-	@echo ... PROGRAM.i
-	@echo ... PROGRAM.s
-	@echo ... diagLIST.obj
-	@echo ... diagLIST.i
-	@echo ... diagLIST.s
+	@echo ... QUOTAZIONE.obj
+	@echo ... QUOTAZIONE.i
+	@echo ... QUOTAZIONE.s
+	@echo ... TIME.obj
+	@echo ... TIME.i
+	@echo ... TIME.s
+	@echo ... TITOLO.obj
+	@echo ... TITOLO.i
+	@echo ... TITOLO.s
+	@echo ... TRANSAZIONE.obj
+	@echo ... TRANSAZIONE.i
+	@echo ... TRANSAZIONE.s
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s
+	@echo ... quotazioniBST.obj
+	@echo ... quotazioniBST.i
+	@echo ... quotazioniBST.s
+	@echo ... titoliLIST.obj
+	@echo ... titoliLIST.i
+	@echo ... titoliLIST.s
 .PHONY : help
 
 

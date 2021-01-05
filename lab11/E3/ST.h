@@ -7,11 +7,16 @@
 #define ST_initValue NULL
 typedef struct st_tab *ST;
 typedef char* ST_KEY;
-ST ST_init(int V, ST_KEY init_value);
+typedef struct {
+    ST_KEY chiave;
+    ST_KEY net;
+}node_key;
+/*Tabella dei simboli dinamica la cui chiave è di tipo node_key */
+ST ST_init(int V);
 int ST_search (ST st, ST_KEY chiave);
-ST_KEY ST_getKey(ST st, int index);
+node_key ST_getKey(ST st, int index);
 void ST_free(ST st);
 int ST_count (ST st);
-void ST_insert(ST st, int index, ST_KEY chiave);
+void ST_insert(ST st, int index, ST_KEY chiave, ST_KEY net);
 
 #endif //E3_ST_H
