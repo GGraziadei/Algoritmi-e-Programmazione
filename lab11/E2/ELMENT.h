@@ -10,10 +10,10 @@ typedef enum {
     p_tipologia,p_d_entrata,p_d_uscita,p_precedenza,p_finale,p_void
 }param_tecnici;
 typedef enum {
-    e_t_transizione,e_t_indietro,e_t_avanti
+    e_t_transizione,e_t_indietro,e_t_avanti,e_t_void
 }e_tipologia;
 typedef enum {
-    e_d_spalle,e_d_frontale
+    e_d_spalle,e_d_frontale,e_d_void
 }e_direzione;
 typedef enum{
     e_p_non_preceduto,e_p_preceduto
@@ -26,11 +26,12 @@ typedef struct{
     KEY_elment nome;
     int parametri_tecnici[p_void];
     int livello;
-    float punti;
+    float punti,app;
 }ELMENT;
 ELMENT ELMENT_init();
 void ELMENT_read(FILE *fp,ELMENT *e);
 KEY_elment ELMENT_getKey(ELMENT *e);
 void ELMENT_free(ELMENT e);
+void ELMENT_cpy(ELMENT *e1,ELMENT *e2);
 void ELMENT_print(FILE *out, ELMENT *e);
 #endif //E1_ELMENT_H

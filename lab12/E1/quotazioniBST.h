@@ -1,7 +1,7 @@
 #ifndef E1_QUOTAZIONIBST_H
 #define E1_QUOTAZIONIBST_H
 #include "QUOTAZIONE.h"
-#include <limits.h>
+#include <float.h>
 #define S_soglia_bilanciamento 1
 typedef struct quotazioniBST *QUOTAZIONI;
 typedef enum {inorder,postorder,preorder,none}print_m;
@@ -15,5 +15,6 @@ float QUOTAZIONI_max(QUOTAZIONI bst);
 float QUOTAZIONI_min(QUOTAZIONI bst);
 DATA QUOTAZIONI_minD(QUOTAZIONI bst);
 DATA QUOTAZIONI_maxD(QUOTAZIONI bst);
+int QUOTAZIONI_qDayNum(QUOTAZIONI bst);
 void QUOTAZIONI_bestQ(float  *bestMax,float *bestMin,DATA d1,DATA d2,QUOTAZIONI bst);
 #endif //E1_QUOTAZIONIBST_H

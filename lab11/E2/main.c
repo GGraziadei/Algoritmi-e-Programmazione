@@ -13,14 +13,14 @@ tab_t init_DB();
 void free_DB(tab_t *tab);
 
 int main() {
+    setbuf(stdout,0);
     tab_t DB;
     do {
         DB = init_DB();
         printf("\n\n INSERIRE DD e DP (-1 per uscire):\n> ");
         scanf("%d %d",&DB.dd,&DB.dp);
         if(DB.dd >= 0 && DB.dp>=0){
-            CORPOLIBERO_creaDiagList(DB.elmentsArray, DB.dd);
-            CORPOLIBERO_creaPROGRAM(DB.elmentsArray, DB.dp);
+            CORPOLIBERO_greedy(DB.elmentsArray,DB.dd,DB.dp);
             free_DB(&DB);
         }
     }while (DB.dd >= 0);

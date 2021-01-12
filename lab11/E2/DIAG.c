@@ -1,51 +1,44 @@
 #include "DIAG.h"
 
-DIAG DIAG_init(int N, int *index_vector,float value,int livello){
-    DIAG d;
-    int i;
-    d.elments_index = malloc(N*sizeof (int));
-    d.value = value;
-    d.num = N;
-    d.livello = livello;
-    for(i=0; i<N; i++)
-        d.elments_index[i] = index_vector[i];
-    return d;
-}
+
 DIAG DIAG_void(){
+    int i;
     DIAG d;
-    d.livello = d.num = 0;
+    d.livello  = 0;
     d.value = 0;
-    d.elments_index = calloc(DIAG_num,sizeof (int));
+    d.num = 0;
+    for(i=0; i<DIAG_num; i++)
+        d.e_inDiag[i] = ELMENT_init();
     return d;
 }
 
 void DIAG_free(DIAG *dp){
-    free(dp->elments_index);
+    int i;
+    for(i=0; i<DIAG_num; i++)
+        ELMENT_free(dp->e_inDiag[i]);
 }
 
-int DIAG_eq(DIAG *d1,DIAG *d2){
-    int i;
-    if(d1->num == d2->num && d1->value==d2->value){
-        for(i=0; i<d1->num; i++)
-            if(d1->elments_index[i] != d2->elments_index[i])
-                return 0;
-        return 1;
-    }return 0;
-}
+
 void DIAG_print(FILE *out,DIAG *dp){
     int i;
     fprintf(out,"\nDIAG\nPunteggio: %0.2f\tElementi:%d\nLivello difficolta': %d\n",dp->value,dp->num,dp->livello);
     for(i=0; i<dp->num; i++)
-        fprintf(out,"%d\t",dp->elments_index[i]);
+        fprintf(out,"%s\t",dp->e_inDiag[i].nome);
 }
 
 void DIAG_cpy(DIAG *d1,DIAG *d2){
     int i;
-    d1->elments_index = malloc(d2->num*sizeof (int));
+    if(d1->num > 0)
+        DIAG_free(d1);
+    *d1 = DIAG_void();
     d1->num = d2->num;
     d1->livello = d2->livello;
     d1->value = d2->value;
-    for(i=0; i<d1->num; i++){
-        d1->elments_index[i] = d2->elments_index[i];
-    }
+    for(i=0; i<d1->num; i++)
+        ELMENT_cpy(&d1->e_inDiag[i],&d2->e_inDiag[i]);
+}
+void DIAG_addE(DIAG *d,ELMENT *e){
+    ELMENT_cpy(&d->e_inDiag[d->num++],e);
+    d->livello += e->livello;
+    d->value += e->punti;
 }

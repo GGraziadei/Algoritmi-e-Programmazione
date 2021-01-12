@@ -15,8 +15,3 @@ TRANSAZIONE TRANSAZIONE_init (FILE *fin){
     fscanf(fin,"%f %d",&t.value,&t.numero);
     return t;
 }
-
-void TRANSAZIONE_print(FILE *fout, TRANSAZIONE *tp){
-    TIME_print(fout,tp->time);
-    fprintf(fout,"\tVALUE: %.3f\tNUMERO_stock_scambiati: %d\n",tp->value,tp->numero);
-}

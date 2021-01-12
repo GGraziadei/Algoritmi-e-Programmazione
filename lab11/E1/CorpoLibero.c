@@ -115,14 +115,16 @@ static int pruning(DIAG *DIAG_tmp,int pos, int indice,int DD,ELMENTS eA){
 }
 
 static int DIAG_check(DIAG *dp,int N,ELMENTS eA){
-    int i;
+    int i,ok=0;
     e_tipologia e_acrobatico;
+    dp->value = 0;
     for(i=0; i<N; i++){
+        dp->value += eA->elementi[dp->elments_index[i]].punti;
         e_acrobatico = eA->elementi[dp->elments_index[i]].parametri_tecnici[p_tipologia];
         if(e_acrobatico == e_t_indietro || e_acrobatico == e_t_avanti)
-            return 1;
+            if(ok == 0) ok  =1;
     }
-    return 0;
+    return ok;
 }
 
 void CORPOLIBERO_creaPROGRAM(ELMENTS eA,int DP){

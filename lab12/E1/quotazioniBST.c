@@ -25,11 +25,11 @@ static link partitionR(link root,int k);
 static link balanceR(link root,link z);
 static void printR(FILE *fout,link root,print_m m,link z);
 static int countR(link root, link z,count_m c);
-static float checkMaxR(link h,link z);
-static float checkMinR(link h,link z);
 static DATA checkMaxD(link h,link z);
 static DATA checkMinD(link h,link z);
 static float searchBestQ(link h,link z,DATA d1, DATA d2,count_m c);
+static float searchBestQUpdate(link h,link z,count_m c);
+
 static int max(int a,int b){
    return a>=b?a:b;
 }static int min(int a,int b){
@@ -52,7 +52,7 @@ static float maxF(float a,float b, float c){
 }
 QUOTAZIONI BST_init(){
     QUOTAZIONI bst = malloc(sizeof (struct quotazioniBST));
-    bst->z = new_node(QUOTAZIONE_void(),NULL,NULL,NULL,0,INT_MAX,INT_MIN);
+    bst->z = new_node(QUOTAZIONE_void(),NULL,NULL,NULL,0,FLT_MAX,FLT_MIN);
     bst->root = bst->z;
     bst->N = 0;
     bst->minQ  = bst->maxQ = 0;
@@ -78,41 +78,24 @@ int QUOTAZIONI_add (QUOTAZIONI bst,FILE *fin,int N){
         }
         QUOTAZIONE_addTRANSAZIONE(fin,q);
     }
-    /*
-     * Mantengo aggiornati gli estremi di ricerca
-    bst->maxQ = checkMaxR(bst->root,bst->z);
-    bst->minQ = checkMinR(bst->root,bst->z);
-     */
+
     bst->dayMin = checkMinD(bst->root,bst->z);
     bst->dayMax = checkMaxD(bst->root,bst->z);
-    bst->maxQ = searchBestQ(bst->root,bst->z,bst->dayMin,bst->dayMax,c_max);
-    bst->minQ = searchBestQ(bst->root,bst->z,bst->dayMin,bst->dayMax,c_min);
+    bst->maxQ = searchBestQUpdate(bst->root,bst->z,c_max);
+    bst->minQ = searchBestQUpdate(bst->root,bst->z,c_min);
     return N;
 }
-float QUOTAZIONI_max(QUOTAZIONI bst){
-    return bst->maxQ;
-}
-float QUOTAZIONI_min(QUOTAZIONI bst){
-    return bst->minQ;
-}
+float QUOTAZIONI_max(QUOTAZIONI bst){ return bst->maxQ;}
+float QUOTAZIONI_min(QUOTAZIONI bst){ return bst->minQ;}
 DATA QUOTAZIONI_maxD(QUOTAZIONI bst){return bst->dayMax;}
 DATA QUOTAZIONI_minD(QUOTAZIONI bst){return bst->dayMin;}
-/*Più versioni di soluzione max min
-static float checkMaxR(link h,link z){
-    if(h == z) return z->maxQ;
-    h->maxQ =  maxF(checkMaxR(h->l,z),checkMaxR(h->r,z),h->qDay->quotazione_day);
-    return h->maxQ;
-}*/
+int QUOTAZIONI_qDayNum(QUOTAZIONI bst){ return bst->N;}
+
 static DATA checkMaxD(link h,link z){
     if(h->r == z)return QUOTAZIONE_extractDAY(h->qDay);
     return checkMaxD(h->r,z);
 }
-/*
-static float checkMinR(link h,link z){
-    if(h == z) return z->minQ;
-    h->minQ = minF(checkMinR(h->l,z),checkMinR(h->r,z),h->qDay->quotazione_day);
-    return h->minQ;
-}*/
+
 static DATA checkMinD(link h,link z){
     if(h->l == z)return QUOTAZIONE_extractDAY(h->qDay);
     return checkMinD(h->l,z);
@@ -121,29 +104,39 @@ void QUOTAZIONI_bestQ(float  *bestMax,float *bestMin,DATA d1,DATA d2,QUOTAZIONI 
     (*bestMax) = searchBestQ(bst->root,bst->z,d1,d2,c_max);
     (*bestMin) = searchBestQ(bst->root,bst->z,d1,d2,c_min);
 }
+
 static float searchBestQ(link h,link z,DATA d1, DATA d2,count_m c){
     float dx,sx,todayQ;
-
-    if(h == z)
-        return c==c_max?z->maxQ:z->minQ;
-
-    dx = sx = todayQ = (c==c_max?z->maxQ:z->minQ);
     DATA day = QUOTAZIONE_extractDAY(h->qDay);
-
-    if(DAY_cmp(d1,day) <= 0)
-        sx = searchBestQ(h->l,z,d1,d2,c);
-
+    if(h == z) return c==c_max?z->maxQ:z->minQ;
+    todayQ = c==c_max?z->maxQ:z->minQ;
+    sx = searchBestQ(h->l, z, d1, d2, c);
     if(DAY_overlap(d1,day,d2) == 1)
         todayQ = h->qDay->quotazione_day;
-
-    if(DAY_cmp(d2,day) >= 0)
-        dx = searchBestQ(h->l,z,d1,d2,c);
-
-    if (c == c_max)
+    dx = searchBestQ(h->r, z, d1, d2, c);
+    if (c == c_max){
         return maxF(sx,dx,todayQ);
-    else
+    }
+    else{
         return minF(sx,dx,todayQ);
+    }
 }
+static float searchBestQUpdate(link h,link z,count_m c){
+    float dx,sx,todayQ;
+    if(h == z) return c==c_max?z->maxQ:z->minQ;
+    sx = searchBestQUpdate(h->l, z, c);
+    todayQ = h->qDay->quotazione_day;
+    dx = searchBestQUpdate(h->r, z, c);
+    if (c == c_max){
+        h->maxQ = maxF(sx,dx,todayQ);
+        return h->maxQ;
+    }
+    else{
+        h->minQ = minF(sx,dx,todayQ);
+        return h->minQ;
+    }
+}
+
 QUOTAZIONE *QUOTAZIONI_search(QUOTAZIONI bst,DATA day){
     return searchR(bst->root,day,bst->z);
 }
@@ -175,7 +168,7 @@ static link new_node (QUOTAZIONE *qDay,link l,link r,link p,int N, float min,flo
 static link insertR(link h,QUOTAZIONE *qDay,link z){
     int ris;
     if(h == z)
-        return new_node(qDay,z,z,z,1,z->minQ,qDay->quotazione_day); /*Inserzione in foglia*/
+        return new_node(qDay,z,z,z,1,z->minQ,z->maxQ); /*Inserzione in foglia*/
     /*Se data presente in BST blocco la ricorsione utilizzando la proprietà di chiavi differenti*/
     ris = DAY_cmp(QUOTAZIONE_extractDAY(qDay),QUOTAZIONE_extractDAY(h->qDay) );
     if(ris < 0) {
@@ -253,6 +246,9 @@ void QUOTAZIONI_balance(QUOTAZIONI bst){
         cMin = countR(bst->root,bst->z,c_min);
         printf("Bilanciamento completato\n\tCAMMINO MAX: %d, CAMMINO MINIMO: %d\n",cMax,cMin);
     }
+
+    bst->maxQ = searchBestQUpdate(bst->root,bst->z,c_max);
+    bst->minQ = searchBestQUpdate(bst->root,bst->z,c_min);
 }
 static link balanceR(link root,link z){
     int r;
@@ -297,3 +293,4 @@ static void printR(FILE *fout,link root,print_m m,link z){
     if(m == postorder)
         QUOTAZIONE_print(fout,root->qDay);
 }
+

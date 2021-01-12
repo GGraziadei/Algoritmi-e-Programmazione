@@ -3,9 +3,8 @@
 #include "TRANSAZIONE.h"
 typedef struct {
     DATA day;
-    int n_tr,n_tr_max;
-    float quotazione_day;
-    TRANSAZIONE *transazioni;
+    int n_tr;
+    float quotazione_day,q_sum;
 }QUOTAZIONE; /*Quotazione giornaliera (ITEM del BST)*/
 QUOTAZIONE *QUOTAZIONE_void();
 QUOTAZIONE *QUOTAZIONE_init(DATA day);

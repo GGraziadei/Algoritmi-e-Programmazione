@@ -50,9 +50,9 @@ void TITOLO_addTransazioni(FILE *fin,TITOLO stock){
     stock->num_transazioni += N;
 }
 void TITOLO_storage (FILE *fout,TITOLO stock, e_pint print_e){
-    fprintf(fout,"TITOLO: %s [transazioni in memoria %d] \tmaxQ : %.03f minQ: %.03f\n",
-            TITOLO_extractKey(stock),stock->num_transazioni,QUOTAZIONI_max(stock->quotazioniBST),
-                QUOTAZIONI_min(stock->quotazioniBST));
+    fprintf(fout,"\nstock > %s (vertici BST delle qDay: %d) \t[transazioni elaborate %d] \n\t\tmaxQ : %.03f minQ: %.03f\n",
+            TITOLO_extractKey(stock),QUOTAZIONI_qDayNum(stock->quotazioniBST),
+                stock->num_transazioni,QUOTAZIONI_max(stock->quotazioniBST),QUOTAZIONI_min(stock->quotazioniBST));
     if(print_e == e_titolo_bst)
         BST_storage(fout,stock->quotazioniBST);
 }
@@ -95,14 +95,19 @@ void TITOLO_UI(TITOLO stock){
                     QUOTAZIONI_bestQ(&max,&min,d1,d2,stock->quotazioniBST);
                     printf("maxQ: %0.3f \t minQ: %0.3f\n",max,min);
                 }
-                else printf("NO MATCH\n");
+                else {
+                    printf("NO MATCH: Per favore inserisci un intervallo che faccia OVERLAP con questo intervallo\n");
+                    DAY_print(stdout,QUOTAZIONI_minD(stock->quotazioniBST));
+                    DAY_print(stdout,QUOTAZIONI_maxD(stock->quotazioniBST));
+                    printf("\n");
+                }
             }
                 break;
             case 4:TITOLO_storage(stdout,stock,e_titolo);
                 break;/*Mantengo sempre aggiornati max e min maxDay e minDay*/
-            case 5: QUOTAZIONI_balance(stock->quotazioniBST);
+            case 5:QUOTAZIONI_balance(stock->quotazioniBST);
                 break;
+            default:break;
         }
     } while (fineUI != 1);
-    QUOTAZIONI_balance(stock->quotazioniBST);
 }

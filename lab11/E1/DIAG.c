@@ -25,7 +25,7 @@ void DIAG_free(DIAG *dp){
 
 int DIAG_eq(DIAG *d1,DIAG *d2){
     int i;
-    if(d1->num == d2->num && d1->value==d2->value){
+    if(d1->num == d2->num ){
         for(i=0; i<d1->num; i++)
             if(d1->elments_index[i] != d2->elments_index[i])
                 return 0;

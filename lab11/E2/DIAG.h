@@ -4,16 +4,17 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
-
+#include "ELMENT.h"
 #define DIAG_num 5
 typedef struct{
-    int *elments_index,num,livello;
+    int livello,num;
+    ELMENT e_inDiag[DIAG_num];
     float value;
 }DIAG;
-DIAG DIAG_init(int N, int *index_vector,float value,int livello);
+
 DIAG DIAG_void();
-int DIAG_eq(DIAG *d1,DIAG *d2);
 void DIAG_free(DIAG *dp);
 void DIAG_cpy(DIAG *d1,DIAG *d2);
 void DIAG_print(FILE *out,DIAG *dp);
+void DIAG_addE(DIAG *d,ELMENT *e);
 #endif //E1_DIAG_H

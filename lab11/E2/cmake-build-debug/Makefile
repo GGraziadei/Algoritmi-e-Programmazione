@@ -67,10 +67,10 @@ RM = "C:\Program Files\JetBrains\CLion 2020.2.3\bin\cmake\win\bin\cmake.exe" -E 
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "C:\Users\Gianluca Graziadei\Desktop\LAB\lab11\E1"
+CMAKE_SOURCE_DIR = "C:\Users\Gianluca Graziadei\Desktop\LAB\lab11\E2"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "C:\Users\Gianluca Graziadei\Desktop\LAB\lab11\E1\cmake-build-debug"
+CMAKE_BINARY_DIR = "C:\Users\Gianluca Graziadei\Desktop\LAB\lab11\E2\cmake-build-debug"
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -99,9 +99,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start "C:\Users\Gianluca Graziadei\Desktop\LAB\lab11\E1\cmake-build-debug\CMakeFiles" "C:\Users\Gianluca Graziadei\Desktop\LAB\lab11\E1\cmake-build-debug\CMakeFiles\progress.marks"
+	$(CMAKE_COMMAND) -E cmake_progress_start "C:\Users\Gianluca Graziadei\Desktop\LAB\lab11\E2\cmake-build-debug\CMakeFiles" "C:\Users\Gianluca Graziadei\Desktop\LAB\lab11\E2\cmake-build-debug\CMakeFiles\progress.marks"
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start "C:\Users\Gianluca Graziadei\Desktop\LAB\lab11\E1\cmake-build-debug\CMakeFiles" 0
+	$(CMAKE_COMMAND) -E cmake_progress_start "C:\Users\Gianluca Graziadei\Desktop\LAB\lab11\E2\cmake-build-debug\CMakeFiles" 0
 .PHONY : all
 
 # The main clean target
@@ -142,6 +142,60 @@ E1/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/build
 .PHONY : E1/fast
 
+CorpoLibero.obj: CorpoLibero.c.obj
+
+.PHONY : CorpoLibero.obj
+
+# target to build an object file
+CorpoLibero.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/CorpoLibero.c.obj
+.PHONY : CorpoLibero.c.obj
+
+CorpoLibero.i: CorpoLibero.c.i
+
+.PHONY : CorpoLibero.i
+
+# target to preprocess a source file
+CorpoLibero.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/CorpoLibero.c.i
+.PHONY : CorpoLibero.c.i
+
+CorpoLibero.s: CorpoLibero.c.s
+
+.PHONY : CorpoLibero.s
+
+# target to generate assembly for a file
+CorpoLibero.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/CorpoLibero.c.s
+.PHONY : CorpoLibero.c.s
+
+DIAG.obj: DIAG.c.obj
+
+.PHONY : DIAG.obj
+
+# target to build an object file
+DIAG.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/DIAG.c.obj
+.PHONY : DIAG.c.obj
+
+DIAG.i: DIAG.c.i
+
+.PHONY : DIAG.i
+
+# target to preprocess a source file
+DIAG.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/DIAG.c.i
+.PHONY : DIAG.c.i
+
+DIAG.s: DIAG.c.s
+
+.PHONY : DIAG.s
+
+# target to generate assembly for a file
+DIAG.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/DIAG.c.s
+.PHONY : DIAG.c.s
+
 ELMENT.obj: ELMENT.c.obj
 
 .PHONY : ELMENT.obj
@@ -169,59 +223,32 @@ ELMENT.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/ELMENT.c.s
 .PHONY : ELMENT.c.s
 
-diagLIST.obj: diagLIST.c.obj
+PROGRAM.obj: PROGRAM.c.obj
 
-.PHONY : diagLIST.obj
-
-# target to build an object file
-diagLIST.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/diagLIST.c.obj
-.PHONY : diagLIST.c.obj
-
-diagLIST.i: diagLIST.c.i
-
-.PHONY : diagLIST.i
-
-# target to preprocess a source file
-diagLIST.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/diagLIST.c.i
-.PHONY : diagLIST.c.i
-
-diagLIST.s: diagLIST.c.s
-
-.PHONY : diagLIST.s
-
-# target to generate assembly for a file
-diagLIST.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/diagLIST.c.s
-.PHONY : diagLIST.c.s
-
-elmentsArray.obj: elmentsArray.c.obj
-
-.PHONY : elmentsArray.obj
+.PHONY : PROGRAM.obj
 
 # target to build an object file
-elmentsArray.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/elmentsArray.c.obj
-.PHONY : elmentsArray.c.obj
+PROGRAM.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/PROGRAM.c.obj
+.PHONY : PROGRAM.c.obj
 
-elmentsArray.i: elmentsArray.c.i
+PROGRAM.i: PROGRAM.c.i
 
-.PHONY : elmentsArray.i
+.PHONY : PROGRAM.i
 
 # target to preprocess a source file
-elmentsArray.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/elmentsArray.c.i
-.PHONY : elmentsArray.c.i
+PROGRAM.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/PROGRAM.c.i
+.PHONY : PROGRAM.c.i
 
-elmentsArray.s: elmentsArray.c.s
+PROGRAM.s: PROGRAM.c.s
 
-.PHONY : elmentsArray.s
+.PHONY : PROGRAM.s
 
 # target to generate assembly for a file
-elmentsArray.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/elmentsArray.c.s
-.PHONY : elmentsArray.c.s
+PROGRAM.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\E1.dir\build.make CMakeFiles/E1.dir/PROGRAM.c.s
+.PHONY : PROGRAM.c.s
 
 main.obj: main.c.obj
 
@@ -259,15 +286,18 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... E1
+	@echo ... CorpoLibero.obj
+	@echo ... CorpoLibero.i
+	@echo ... CorpoLibero.s
+	@echo ... DIAG.obj
+	@echo ... DIAG.i
+	@echo ... DIAG.s
 	@echo ... ELMENT.obj
 	@echo ... ELMENT.i
 	@echo ... ELMENT.s
-	@echo ... diagLIST.obj
-	@echo ... diagLIST.i
-	@echo ... diagLIST.s
-	@echo ... elmentsArray.obj
-	@echo ... elmentsArray.i
-	@echo ... elmentsArray.s
+	@echo ... PROGRAM.obj
+	@echo ... PROGRAM.i
+	@echo ... PROGRAM.s
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s

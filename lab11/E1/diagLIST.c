@@ -88,6 +88,8 @@ PROGRAM DIAGLIST_makePROGRAM (DIAGLIST dl,int DP,ELMENTS eA){
     return best_program;
 }
 
+/*Non essendoci alcun vincolo di concatenazione tra due diagonali è possibile valutare soluzioni le cui prime due diagonali
+ * siano invertite rispetto le soluzioni proposte, tutto dipende dall'ordine quindi criteri di pruning durante la generazione diagonali. */
 static void dispRipR(link head,int pos,PROGRAM *p, PROGRAM *best,int DP,ELMENTS eA){
     link x;
     if(pos >= DIAG_IN_PROGRAM){
@@ -119,8 +121,10 @@ int DIAGLIST_checkPROGRAM(PROGRAM *p,ELMENTS eA,int DP){
     int i,j,checkDoubleA=0,checkAA=0,checkAI=0;
     DIAG d = DIAG_void();
     ELMENT e,e_tmp;
-    for(i=0; i<DIAG_IN_PROGRAM && (checkAI*checkAA*checkDoubleA == 0); i++){
+    p->value = 0;
+    for(i=0; i<DIAG_IN_PROGRAM; i++){
         if(d.elments_index != NULL) DIAG_free(&d);
+        p->value += p->programmaGara[i].value;
         DIAG_cpy(&d,&p->programmaGara[i]);
         for(j=0; j<d.num; j++){
             e = ELMENTS_getELMENT(eA,d.elments_index[j]);
