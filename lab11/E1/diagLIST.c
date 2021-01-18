@@ -63,10 +63,7 @@ static link LinearSearch (DIAGLIST dl,DIAG *dp){
 int DIAGLIST_getNDiag(DIAGLIST dl){
     return dl->nDiag;
 }
-int DIAGLIST_isSaved (DIAGLIST dl, DIAG *dp){
-    if(LinearSearch(dl,dp)!= NULL)return 1;
-    return 0;
-}
+
 void DIAGLIST_print(FILE *out,DIAGLIST dl){
     link x = dl->head;
     while (x!=NULL){
@@ -92,10 +89,12 @@ PROGRAM DIAGLIST_makePROGRAM (DIAGLIST dl,int DP,ELMENTS eA){
  * siano invertite rispetto le soluzioni proposte, tutto dipende dall'ordine quindi criteri di pruning durante la generazione diagonali. */
 static void dispRipR(link head,int pos,PROGRAM *p, PROGRAM *best,int DP,ELMENTS eA){
     link x;
-    if(pos >= DIAG_IN_PROGRAM){
+    if(pos >= DIAG_IN_PROGRAM ){
         p->bonus = getBonus(&p->programmaGara[DIAG_IN_PROGRAM-1],eA);
-        if( (p->value + p->bonus) > best->value ){
-            if(DIAGLIST_checkPROGRAM(p,eA,DP) == 1) {
+        if(DIAGLIST_checkPROGRAM(p,eA,DP) == 1) {
+            if ((p->value + p->bonus) > best->value) {
+                /*Eseguo per prima la check program con lo scopo duplice di ridurre gli errori legati al calcolo su float che
+                 * si perturbano su somme e differenze ripetute e testare il programma di gara*/
                 PROGRAM_cpy(best, p);
                 best->value += p->bonus;
             }

@@ -69,9 +69,9 @@ int creaTab(ST st_tab){
     assert(fp!=NULL);
     while(fscanf(fp,"%s %s %s %s %*d",elab1,rete1,elab2,rete2) == 4){
         if(ST_search(st_tab,elab1) == -1)
-            ST_insert(st_tab,ST_count(st_tab),elab1,rete1);
+            ST_insert(st_tab,elab1,rete1);
         if(ST_search(st_tab,elab2) == -1)
-            ST_insert(st_tab,ST_count(st_tab),elab2,rete2);
+            ST_insert(st_tab,elab2,rete2);
     }
     fclose(fp);
     return ST_count(st_tab);

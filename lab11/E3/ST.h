@@ -17,6 +17,6 @@ int ST_search (ST st, ST_KEY chiave);
 node_key ST_getKey(ST st, int index);
 void ST_free(ST st);
 int ST_count (ST st);
-void ST_insert(ST st, int index, ST_KEY chiave, ST_KEY net);
+void ST_insert(ST st, ST_KEY chiave, ST_KEY net);
 
 #endif //E3_ST_H

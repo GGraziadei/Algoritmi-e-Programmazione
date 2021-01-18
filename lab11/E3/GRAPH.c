@@ -42,7 +42,7 @@ int GRAPH_getIndex(GRAPH G, ST_KEY chiave, ST_KEY net){
     int id;
     id = ST_search(G->st_tab,chiave);
     if (id == -1)
-        ST_insert(G->st_tab,ST_count(G->st_tab),chiave,net);
+        ST_insert(G->st_tab,chiave,net);
     return id;
 }
 static link new_node(int v,int wt,link next){

@@ -161,7 +161,7 @@ void CORPOLIBERO_greedy(ELMENTS eA,int DD,int DP){
                     appCalc_Hyde(eA,DIAG_dir[i],DIAG_tipo[i]);
                     ELMENTS_sort(eA);
 
-                    /*Questo implica che ho ottenuto necessariamente un elemento appetibile in index 0*/
+                    /*Questo implica che ho ottenuto necessariamente un elemento appetibile in index 0 */
                     indexAPP = 0;
                     found = 1;
                     #if DBG
@@ -169,22 +169,21 @@ void CORPOLIBERO_greedy(ELMENTS eA,int DD,int DP){
                     PROGRAM_print(stdout, &p);
                     #endif
                 }
-                if(p.programmaGara[i].livello + eA->elementi[indexAPP].livello <= DD)
-                    if(p.livello + eA->elementi[indexAPP].livello <= DP)
-                        if(DIAG_dir[i] == eA->elementi[indexAPP].parametri_tecnici[p_d_entrata])
-                        {
-                            if(isAcro(DIAG_tipo[i])) prevAcroA += 1;
+                if(p.programmaGara[i].livello + eA->elementi[indexAPP].livello <= DD &&
+                    p.livello + eA->elementi[indexAPP].livello <= DP &&
+                        DIAG_dir[i] == eA->elementi[indexAPP].parametri_tecnici[p_d_entrata]) {
+                            if (isAcro(DIAG_tipo[i])) prevAcroA += 1;
                             p.livello += eA->elementi[indexAPP].livello;
                             DIAG_dir[i] = eA->elementi[indexAPP].parametri_tecnici[p_d_uscita];
                             DIAG_tipo[i] = eA->elementi[indexAPP].parametri_tecnici[p_tipologia];
                             DIAG_addE(&p.programmaGara[i], &eA->elementi[indexAPP++]);
-                            if(DIAG_tipo[e_t_avanti] && prevAcroA>=2 && pos <= DIAG_IN_PROGRAM ) {
+                            if (DIAG_tipo[e_t_avanti] && prevAcroA >= 2 && pos <= DIAG_IN_PROGRAM) {
                                 /*Empiricamente confrontando la soluzione ottenuta con il calcolo comb, rimepiendo per colonne dopo una
                                  * frequenza di due acro avanti è necessario forzare un elemento indietro
                                  * per evitare che la saturazione di DP inneschi il processo di variazione dir troppo tardi. */
                                 appCalc_bottomAcroA(eA);
                                 ELMENTS_sort(eA);
-                                Hyde = prevAcroA  =0;
+                                Hyde = prevAcroA = 0;
                             }
                             pos++;
                         }

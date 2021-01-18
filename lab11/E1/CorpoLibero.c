@@ -60,20 +60,12 @@ void CORPOLIBERO_creaDiagList(ELMENTS eA,int DD){
 static void dispRipR(ELMENTS eA,int pos,DIAG *DIAG_tmp,int DD){
     int i;
     DIAG pSol;
-    if(pos>=DIAG_num ||
-            (pos>0 && eA->elementi[DIAG_tmp->elments_index[pos-1]].parametri_tecnici[p_finale] == e_f_finale))
-    {
-        /*Condizione di terminazione: ho trovato una diagonale compatibile posizionando 5 elemtni
-         * oppure ho trovato un elemento finale*/
-        if(DIAG_check(DIAG_tmp,pos,eA)) {
-            pSol = DIAG_init(pos, DIAG_tmp->elments_index, DIAG_tmp->value, DIAG_tmp->livello);
-            #if DBG
-            DIAG_print(stdout,&pSol);
-            #endif
-            DIAGLIST_add(pSol, eA->diagList);
-        }
-        /*pSol è la diagonale assegnata al nodo in lista, la sua deallocazione è dipendente dal nodo*/
-        return;
+    int checkDIAG = DIAG_check(DIAG_tmp,pos,eA);
+    if(checkDIAG) {
+        pSol = DIAG_init(pos, DIAG_tmp->elments_index, DIAG_tmp->value, DIAG_tmp->livello);
+        DIAGLIST_add(pSol, eA->diagList);
+        /*Se la diag è verificata aggiungi in lista, la sua deallocazione viene effettuata direttamente in DIAGLIST_free
+         * alla variazione di settaggi*/
     }
     for(i=0; i<eA->N; i++){
         if(!pruning(DIAG_tmp,pos,i,DD,eA)){
@@ -83,17 +75,9 @@ static void dispRipR(ELMENTS eA,int pos,DIAG *DIAG_tmp,int DD){
             dispRipR(eA, pos + 1, DIAG_tmp, DD);
             DIAG_tmp->value -= eA->elementi[i].punti;
             DIAG_tmp->livello -= eA->elementi[i].livello;
-        }else if(DIAG_check(DIAG_tmp,pos,eA)) {
-            pSol = DIAG_init(pos, DIAG_tmp->elments_index, DIAG_tmp->value, DIAG_tmp->livello);
-            if(DIAGLIST_isSaved(eA->diagList,&pSol) == 0 ){
-                #if DBG
-                DIAG_print(stdout,&pSol);
-                #endif
-                DIAGLIST_add(pSol, eA->diagList);
-            }
-            else DIAG_free(&pSol);
         }
     }
+    /*Condizione di terminazione implicita ho valutato tutte le possibili diagonali con "tutti i possibili incastri"*/
 }
 
 static int pruning(DIAG *DIAG_tmp,int pos, int indice,int DD,ELMENTS eA){

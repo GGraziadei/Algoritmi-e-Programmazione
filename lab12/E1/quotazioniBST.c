@@ -152,7 +152,7 @@ static QUOTAZIONE *searchR (link root,DATA day,link z){
 
 static void BST_insert(QUOTAZIONI bst,DATA day,QUOTAZIONE *qp){
     bst->root = insertR(bst->root,qp,bst->z);
-    bst->N = bst->root->N + 1;
+    bst->N = bst->root->N;
 }
 static link new_node (QUOTAZIONE *qDay,link l,link r,link p,int N, float min,float max){
     link node_x = malloc(sizeof (struct nodo));
