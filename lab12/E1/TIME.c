@@ -10,7 +10,16 @@ DATA DAY_void(){
     day.mm = day.gg = day.yyyy = 0;
     return day;
 }
-
+DATA DAY_min(){
+    DATA day;
+    day.mm = day.gg = day.yyyy = 3000;
+    return day;
+}
+DATA DAY_max(){
+    DATA day;
+    day.mm = day.gg = day.yyyy = 0;
+    return day;
+}
 ORA TIME_init(FILE *fin){
     assert(fin != NULL);
     ORA time = TIME_void();

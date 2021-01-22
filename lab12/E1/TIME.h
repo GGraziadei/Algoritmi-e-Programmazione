@@ -14,6 +14,8 @@ typedef struct {
     int hh,mm;
 }ORA;
 DATA DAY_void();
+DATA DAY_min();
+DATA DAY_max();
 ORA TIME_void();
 ORA TIME_init(FILE *fin);
 int DAY_cmp(DATA d1,DATA d2);

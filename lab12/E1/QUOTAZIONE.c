@@ -24,14 +24,13 @@ float QUOTAZIONE_qDay(QUOTAZIONE *qp){
 }
 void QUOTAZIONE_addTRANSAZIONE(FILE *fin,QUOTAZIONE *qp){
     assert(qp != NULL);
-    TRANSAZIONE t = TRANSAZIONE_init(fin);
+    TRANSAZIONE t = TRANSAZIONE_init(fin); /*Utilizzo il modulo transazione per la sola gestione dell'input*/
     qp->q_sum += (t.value*(float )t.numero);
     qp->n_tr +=t.numero;
     qp->quotazione_day = qp->q_sum / (float )qp->n_tr;
 }
 
 void QUOTAZIONE_print(FILE *fout,QUOTAZIONE *qp){
-    int i;
     DAY_print(fout,qp->day);
     fprintf(fout,"Quotazione giornaliera > %.3f\n",qp->quotazione_day);
 }

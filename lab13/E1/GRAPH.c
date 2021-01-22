@@ -19,7 +19,7 @@ static comb_sol expSearch (GRAPH G,EDGE *archi,EDGE *p_sol,int inf,int sup);
 static int check(EDGE *p_sol,int card,EDGE *archi,GRAPH G);
 static int dfs_isDAGr(link *lAdj, link z,int id_starter, int *pre,int *post,int *time);
 static void dfs_TS(GRAPH D,int id_starter,int *pre,int *time,int *ts);
-static void maxPathDAG(GRAPH D,int *ts);
+static void maxD(GRAPH D,int *ts, int start);
 static void update_sol(comb_sol *sol,EDGE *p_sol);
 static void getInfoSet(comb_sol *sol,GRAPH G);
 static void topologic_inv(int *ts,int N);
@@ -78,7 +78,7 @@ static void sol_free(comb_sol *sol){
     if(sol->edgesArray != NULL)
         free(sol->edgesArray);
 }
-static void maxPathDAG(GRAPH D,int *ts){
+static void maxD(GRAPH D,int *ts, int start){
     int i,*d,*st;
     link t;
     d = malloc(D->V * sizeof (int ));
@@ -87,58 +87,51 @@ static void maxPathDAG(GRAPH D,int *ts){
         d[i] = INT_MIN; /*Sto cercando il cammino max di un DAG*/
         st[i] = -1;
     }
-    st[ts[0]] = ts[0];
-    d[ts[0]] = 0;
-    for(i=0; i<D->V; i++){
-        if(ts[i] != -1) {
-            for (t = D->lAdj[ts[i]]; t != D->z; t = t->next) {
-                if (d[t->v] < d[ts[i]] + t->wt) {
-                    /*Relaxation inversa*/
-                    d[t->v] = d[ts[i]] + t->wt;
-                    st[t->v] = ts[i];
-                }
-            }
-        }
+    st[ts[start]] = ts[start];
+    d[ts[start]] = 0;
+    for( i=start; i<D->V; i++){
+       for (t = D->lAdj[ts[i]]; t != D->z; t = t->next) {
+           if (d[t->v] < d[ts[i]] + t->wt) {
+               /*Relaxation inversa*/
+               d[t->v] = d[ts[i]] + t->wt;
+               st[t->v] = ts[i];
+           }
+       }
     }
-    for(i=0; i<D->V; i++){
-        printf("parent di %s: %s MAX_dist (da source): %d\n",ST_GETkey(D->tab,i),ST_GETkey(D->tab,st[i]),d[i]);
-        if(st[i] == -1)
-            return;
+    for(i=0; i<D->V; i++) {
+        if (d[i] != INT_MIN) {
+            if (i != ts[start])
+                printf("\t-> %s [%d] (parent %s)\n",
+                       ST_GETkey(D->tab, i), d[i], ST_GETkey(D->tab, st[i]));
+        } else printf("\t->%s [NON RAGGIUNTO]\n", ST_GETkey(D->tab, i));
     }
     free(d);
 }
-void DAG_maxPath(GRAPH D){
-    int time,*pre,*ts,i,j,checkTS;
+void DAG_maxD(GRAPH D){
+    int time,*pre,*ts,i,j;
     EDGE *archi = malloc(D->E * sizeof (EDGE));
     EDGES_extract(D,archi);
     if(check(NULL,0,archi,D) != 1 ){
         printf("FUNZIONO SOLAMENTE CON DAG!\n");
         return;
     }
+    free(archi);
     pre = malloc(D->V * sizeof (int ));
     ts = malloc(D->V * sizeof (int ));
-    for(i=0; i<D->V; i++)
-        pre[i] = ts[i] = -1;
+
     for(i=0; i<D->V; i++) {
-        if(pre[i] == -1) {
-            /*Cerco tutte le source presenti.*/
-            time = 0;
-            for(j=0; j<D->V; j++)
-                pre[j] = ts[j] = -1;
-            dfs_TS(D, i, pre, &time, ts);
-            topologic_inv(ts, D->V);
-            checkTS = 1;
-            for(j=0; j<D->V; j++)
-                if (ts[i] == -1)checkTS = 0;
-            if(checkTS) {
-                printf("\n");
-                printf("SOURCE: %s\nTS order: ",ST_GETkey(D->tab,i));
-                for(j=0; j<D->V; j++)
-                    printf("%s\t",ST_GETkey(D->tab,ts[j]));
-                printf("\n");
-                maxPathDAG(D, ts);
-            }
-        }
+        /*Cerco tutte le source presenti.*/
+        time = 0;
+        for(j=0; j<D->V; j++)
+            pre[j] = ts[j] = -1;
+        dfs_TS(D, i, pre, &time, ts);
+        topologic_inv(ts, D->V);
+        j = 0;
+        while (ts[j] == -1)
+            j++; /*Scorro in avanti nel caso ci siano vertici non scoperti*/
+        printf("\nDISTANZA MAX TRA %s %s\n",ST_GETkey(D->tab,ts[j]),j==0?":":"(vertice non sorgente!!)");
+        printf("\n");
+        maxD(D, ts,j);
     }
     free(pre);
     free(ts);
@@ -153,12 +146,12 @@ void DAG_build(GRAPH G){
     if(check(NULL,0,archi,G)){
         printf("Il GRAFO E' UN DAG.\n");
         return;
-    } /*IL GRAFO è UN DAG, sostituisce la verifica sul powerset di cardinalità 0*/
+    } /*IL GRAFO è UN DAG, sostituisce la verifica sul set di cardinalità 0*/
         /*Un DAG connesso ha |V| - 1 archi. Aggiungere un arco significa innescare un ciclo
      * il numero di archi da rimuovere per ottenere un DAG è quindi pari a |E|-(|V|-1) */
     cardMax= G->E - G->V + 1;
     p_sol = malloc(cardMax * sizeof (EDGE));
-    sol = expSearch(G,archi,p_sol,1,cardMax + 1);
+    sol = expSearch(G,archi,p_sol,1,cardMax );
     getInfoSet(&sol,G);
     for(i=0; i<sol.card; i++){
         G->lAdj[sol.edgesArray[i].u] = removeE(G->lAdj[sol.edgesArray[i].u],G->z,sol.edgesArray[i].v);
@@ -171,11 +164,12 @@ void DAG_build(GRAPH G){
 static comb_sol expSearch (GRAPH G,EDGE *archi,EDGE *p_sol,int inf,int sup){
     int q;
     comb_sol solQ,solTmp;
-    if(inf >= sup) return sol_null();
+    if(inf > sup)
+        return sol_null();
     q = (inf+sup) /2;
     solQ = sol_init(q); /*Se la soluzione non è corretta la deallocazione e rimandata allo stack chiamante*/
     if(comb_semplR(&solQ,archi,0,0,p_sol,0,G) == 1){
-        solTmp = expSearch(G,archi,p_sol,inf,q);
+        solTmp = expSearch(G,archi,p_sol,inf,q - 1);
         if(solTmp.peso != -1){
             sol_free(&solQ);
             return solTmp;
@@ -207,7 +201,6 @@ static int comb_semplR(comb_sol *sol,EDGE *archi,int pos,int start,EDGE *p_sol,i
         if (comb_semplR(sol,archi,pos + 1,i +1,p_sol,p_peso + archi[i].wt,G))
             ok = 1;
     }
-    /*Se esiste almeno una soluzione con questa cardinalità questa è la minima cardinalità*/
     return ok;
 }
 
@@ -244,7 +237,7 @@ static int dfs_isDAGr(link *lAdj, link z,int id_starter, int *pre,int *post,int 
     for(t = lAdj[id_starter]; t!=z && test != 0; t = t->next) {
         if (pre[t->v] == -1)
             test = dfs_isDAGr(lAdj,z,t->v, pre, post, time); /*Seguo l'arco tree*/
-        if (post[t->v] == -1)
+        else if (post[t->v] == -1)
             return 0;/*Ho individuato un arco B, per cui non DAG, verifica fallita. Ignoro archi F e C*/
     }
     post[id_starter] = (*time)++;

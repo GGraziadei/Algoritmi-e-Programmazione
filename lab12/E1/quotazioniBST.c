@@ -12,6 +12,7 @@ struct nodo{
     link l,r,p;
     int N;
     float maxQ,minQ;
+    DATA dayMax,dayMin;
 };
 static link new_node (QUOTAZIONE *qDay,link l,link r,link p,int N,float minQ,float maxQ);
 static void free_node(link node_x);
@@ -54,6 +55,8 @@ QUOTAZIONI BST_init(){
     QUOTAZIONI bst = malloc(sizeof (struct quotazioniBST));
     bst->z = new_node(QUOTAZIONE_void(),NULL,NULL,NULL,0,FLT_MAX,FLT_MIN);
     bst->root = bst->z;
+    bst->z->dayMin = DAY_min();
+    bst->z->dayMax = DAY_max(); /*La ricerca funziona dall'anno 0 fino all'anno 3000*/
     bst->N = 0;
     bst->minQ  = bst->maxQ = 0;
     bst->dayMax =  bst->dayMin = DAY_void();
@@ -78,9 +81,9 @@ int QUOTAZIONI_add (QUOTAZIONI bst,FILE *fin,int N){
         }
         QUOTAZIONE_addTRANSAZIONE(fin,q);
     }
-
-    bst->dayMin = checkMinD(bst->root,bst->z);
-    bst->dayMax = checkMaxD(bst->root,bst->z);
+    /*Ho scelto di salvare gli estremi di date di ogni albero radicato le quotazioni massima e
+     * minima di ogni sottoalbero radicato con l'intenzione di prediligere la ricerca rispetto la modifica: ho la possibilità di pre-filtrare
+     * intervalli di date che non trovano match e garantire una visualizzazione del valore maxQ e minQ dello stock oltre che guidare la ricerca per intervalli*/
     bst->maxQ = searchBestQUpdate(bst->root,bst->z,c_max);
     bst->minQ = searchBestQUpdate(bst->root,bst->z,c_min);
     return N;
@@ -108,22 +111,27 @@ void QUOTAZIONI_bestQ(float  *bestMax,float *bestMin,DATA d1,DATA d2,QUOTAZIONI 
 static float searchBestQ(link h,link z,DATA d1, DATA d2,count_m c){
     float dx,sx,todayQ;
     DATA day = QUOTAZIONE_extractDAY(h->qDay);
-    if(h == z) return c==c_max?z->maxQ:z->minQ;
-    todayQ = c==c_max?z->maxQ:z->minQ;
-    sx = searchBestQ(h->l, z, d1, d2, c);
+    if(h == z)
+        return c==c_max?z->maxQ:z->minQ;
+    sx = dx = todayQ = c==c_max?z->maxQ:z->minQ;
     if(DAY_overlap(d1,day,d2) == 1)
         todayQ = h->qDay->quotazione_day;
-    dx = searchBestQ(h->r, z, d1, d2, c);
-    if (c == c_max){
+    if(h->l != z && DAY_cmp(h->l->dayMin,d2) <= 0 && DAY_cmp(h->l->dayMax,d1)>= 0)
+        sx = searchBestQ(h->l, z, d1, d2, c);
+    if(h->r != z && DAY_cmp(h->r->dayMin,d2) <= 0 && DAY_cmp(h->r->dayMax,d1)>= 0)
+        dx = searchBestQ(h->r, z, d1, d2, c);
+    if (c == c_max)
         return maxF(sx,dx,todayQ);
-    }
-    else{
+    else
         return minF(sx,dx,todayQ);
-    }
 }
 static float searchBestQUpdate(link h,link z,count_m c){
+    /*Mantengo una traccia del max/min del sottoalbero radicato */
     float dx,sx,todayQ;
-    if(h == z) return c==c_max?z->maxQ:z->minQ;
+    if(h == z)
+        return c==c_max?z->maxQ:z->minQ;
+    h->dayMin = checkMinD(h,z);
+    h->dayMax = checkMaxD(h,z);
     sx = searchBestQUpdate(h->l, z, c);
     todayQ = h->qDay->quotazione_day;
     dx = searchBestQUpdate(h->r, z, c);
@@ -153,6 +161,8 @@ static QUOTAZIONE *searchR (link root,DATA day,link z){
 static void BST_insert(QUOTAZIONI bst,DATA day,QUOTAZIONE *qp){
     bst->root = insertR(bst->root,qp,bst->z);
     bst->N = bst->root->N;
+    bst->dayMax  = bst->root->dayMax;
+    bst->dayMin  = bst->root->dayMin;
 }
 static link new_node (QUOTAZIONE *qDay,link l,link r,link p,int N, float min,float max){
     link node_x = malloc(sizeof (struct nodo));
@@ -163,21 +173,27 @@ static link new_node (QUOTAZIONE *qDay,link l,link r,link p,int N, float min,flo
     node_x->N = N;
     node_x->minQ = min;
     node_x->maxQ = max;
+    node_x->dayMin = node_x->dayMax = qDay->day;
     return node_x;
 }
 static link insertR(link h,QUOTAZIONE *qDay,link z){
     int ris;
-    if(h == z)
+    if(h == z){
         return new_node(qDay,z,z,z,1,z->minQ,z->maxQ); /*Inserzione in foglia*/
+    }
     /*Se data presente in BST blocco la ricorsione utilizzando la proprietà di chiavi differenti*/
     ris = DAY_cmp(QUOTAZIONE_extractDAY(qDay),QUOTAZIONE_extractDAY(h->qDay) );
     if(ris < 0) {
         h->l = insertR(h->l, qDay, z);
         h->l->p = h;
+        if(DAY_cmp(h->dayMin,h->l->dayMin) > 0)
+            h->dayMin = h->l->dayMin;
     }
     else if(ris > 0) {
         h->r = insertR(h->r,qDay,z);
         h->r->p = h;
+        if(DAY_cmp(h->dayMax,h->r->dayMax) < 0)
+            h->dayMax = h->r->dayMax;
     }
     (h->N)++;
     return h;
@@ -245,10 +261,9 @@ void QUOTAZIONI_balance(QUOTAZIONI bst){
         cMax = countR(bst->root,bst->z,c_max);
         cMin = countR(bst->root,bst->z,c_min);
         printf("Bilanciamento completato\n\tCAMMINO MAX: %d, CAMMINO MINIMO: %d\n",cMax,cMin);
+        bst->maxQ = searchBestQUpdate(bst->root,bst->z,c_max);
+        bst->minQ = searchBestQUpdate(bst->root,bst->z,c_min);
     }
-
-    bst->maxQ = searchBestQUpdate(bst->root,bst->z,c_max);
-    bst->minQ = searchBestQUpdate(bst->root,bst->z,c_min);
 }
 static link balanceR(link root,link z){
     int r;

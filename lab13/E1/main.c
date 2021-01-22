@@ -17,8 +17,8 @@ int main() {
     DAG_build(G);
     printf("DAG: \n");
     GRAPH_storage(stdout,G);
-    printf("\nCamminoi massimi:\n");
-    DAG_maxPath(G);
+    printf("\nDistanza massima da ogni nodo sorgente:\n");
+    DAG_maxD(G);
     GRAPH_free(G);
     return 0;
 }
